@@ -386,6 +386,7 @@ let dragging = false;
 
 let width = 0;
 let delta = 0;
+let dx = 0;
 
 const calendars = document.getElementById('calendars');
 
@@ -412,25 +413,22 @@ calendars.addEventListener('transitionend', () => {
 calendar.addEventListener('pointerdown', e => {
     startX = e.clientX;
     delta = 0;
+    dragging = false;
 });
 
 calendar.addEventListener('pointermove', e => {
     if (startX === null) return;
 
-    let dx = e.clientX - startX;
+    dx = e.clientX - startX;
 
     if (!dragging) {
         if (Math.abs(dx) < 10) return;
-
-        if (dx > 0) {
-            startX += 10;
-            dx -= 10;
-        } else {
-            startX -= 10;
-            dx += 10;
-        }
-
         dragging = true;
+
+        const d = dx > 0 ? 10 : -10;
+        startX += d;
+        dx -= d;
+
         renderCalendars();
         calendar.setPointerCapture(e.pointerId);
     }
@@ -444,11 +442,10 @@ const stopDragging = e => {
     if (!dragging) return;
     dragging = false;
 
-    const dx = e.clientX - startX - width;
     startX = null;
 
-    console.log(dx);
     if (Math.abs(dx) > 50) delta = dx > 0 ? -1 : 1;
+    else delta = 0;
 
     calendars.style.transition = `transform 0.2s ease`;
     calendars.style.transform = `translateX(-${(1 + delta) * width}px)`;
