@@ -390,7 +390,7 @@ let delta = 0;
 const calendars = document.getElementById('calendars');
 
 const renderCalendars = () => {
-    width = calendar.clientWidth + 20;
+    width = calendar.clientWidth + 30;
     calendars.style.setProperty('--width', `${calendar.clientWidth}px`);
 
     calendars.replaceChildren(
@@ -417,10 +417,18 @@ calendar.addEventListener('pointerdown', e => {
 calendar.addEventListener('pointermove', e => {
     if (startX === null) return;
 
-    const dx = e.clientX - startX;
+    let dx = e.clientX - startX;
 
     if (!dragging) {
         if (Math.abs(dx) < 10) return;
+
+        if (dx > 0) {
+            startX += 10;
+            dx -= 10;
+        } else {
+            startX -= 10;
+            dx += 10;
+        }
 
         dragging = true;
         renderCalendars();
@@ -443,7 +451,7 @@ const stopDragging = e => {
     if (Math.abs(dx) > 50) delta = dx > 0 ? -1 : 1;
 
     calendars.style.transition = `transform 0.2s ease`;
-    calendars.style.transform = `translateX(-${(1 + delta) * width + 10}px)`;
+    calendars.style.transform = `translateX(-${(1 + delta) * width}px)`;
 };
 
 calendar.addEventListener('pointerup', stopDragging);
