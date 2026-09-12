@@ -386,7 +386,8 @@ let dragging = false;
 
 let width = 0;
 let delta = 0;
-let dx = 0;
+let shift = 0;
+let minShift = 10;
 
 const calendars = document.getElementById('calendars');
 
@@ -419,20 +420,20 @@ calendar.addEventListener('pointerdown', e => {
 calendar.addEventListener('pointermove', e => {
     if (startX === null) return;
 
-    dx = e.clientX - startX;
+    shift = e.clientX - startX;
 
     if (!dragging) {
-        if (Math.abs(dx) < 10) return;
+        if (Math.abs(shift) < minShift) return;
         dragging = true;
 
-        const d = dx > 0 ? 10 : -10;
-        startX += d;
-        dx -= d;
+        delta = shift > 0 ? -1 : 1;
+        startX -= delta * minShift;
+        shift += delta * minShift;
 
         renderCalendars();
         calendar.setPointerCapture(e.pointerId);
     }
-    calendars.style.transform = `translateX(${dx - width}px)`;
+    calendars.style.transform = `translateX(${shift - width}px)`;
 });
 
 const stopDragging = e => {
@@ -444,11 +445,11 @@ const stopDragging = e => {
 
     startX = null;
 
-    if (Math.abs(dx) > 50) delta = dx > 0 ? -1 : 1;
-    else delta = 0;
+    delta = 0;
+    if (Math.abs(shift) > 50) delta = shift > 0 ? -1 : 1;
 
     calendars.style.transition = `transform 0.2s ease`;
-    calendars.style.transform = `translateX(-${(1 + delta) * width}px)`;
+    calendars.style.transform = `translateX(-${width + delta * width}px)`;
 };
 
 calendar.addEventListener('pointerup', stopDragging);
