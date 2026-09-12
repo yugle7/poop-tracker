@@ -14,11 +14,47 @@
     <h3 id="chosen-day" class="accent center"></h3>
     <div id="chosen-records"></div>
 </section>
+
 <section id="stats-page" class="screen hidden">
     <div>Статистика</div>
 </section>
-<section id="settings-page" class="screen hidden">
-    <div>Настройки</div>
+
+<section id="settings-page" class="screen hidden col">
+    <a
+            href="https://www.tbank.ru/cf/3sEawgoGUDe"
+            target="_blank"
+            class="row gap-10 pad-10"
+            data-i18n="support"
+    >
+        <svg class="icon">
+            <use href="sprite.svg#heart"></use>
+        </svg>
+        <span>Сказать спасибо</span>
+    </a>
+
+    <a class="row gap-10 pad-10" href="mailto:yuzhakov.gleb@gmail.com?subject=PoopTracker">
+        <svg class="icon">
+            <use href="sprite.svg#chat"></use>
+        </svg>
+        <span data-i18n="mailTo">Написать нам</span>
+    </a>
+    <a
+            href="https://yugle7.github.io/poop-tracker/privacy.html"
+            target="_blank"
+            class="row gap-10 pad-10"
+    >
+        <svg class="icon">
+            <use href="sprite.svg#shield"></use>
+        </svg>
+        <span>Политика конфиденциальности</span>
+    </a>
+
+    <button id="reset-data" class="left row gap-10 pad-10">
+        <svg class="icon">
+            <use href="sprite.svg#reset"></use>
+        </svg>
+        <span>Сбросить данные</span>
+    </button>
 </section>
 
 <div class="hidden">

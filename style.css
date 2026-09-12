@@ -148,6 +148,15 @@ button {
     cursor: pointer
 }
 
+a {
+    outline: none;
+    text-decoration: none;
+}
+
+a, li {
+    cursor: pointer;
+}
+
 .text {
     padding: 10px;
     border-radius: 14px;
@@ -1141,6 +1150,10 @@ select {
     max-height: 50px;
 }
 
+.left {
+    text-align: left;
+}
+
 .add {
     height: 32px;
 }
@@ -1195,6 +1208,10 @@ select {
     font-size: 14px;
     color: gray;
     text-align: right;
+}
+
+.pad-10 {
+    padding: 10px;
 }
 
 .gap-10 {
