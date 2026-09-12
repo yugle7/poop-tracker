@@ -945,6 +945,20 @@ const saveRecord = () => {
     localStorage.setItem('records', JSON.stringify(records));
 }
 
+// 2.3
+
+const resetButton = document.getElementById('reset');
+
+resetButton.onclick = e => {
+    e.preventDefault();
+    records.length = 0;
+    saveRecord();
+    renderChosenRecords();
+    calendarPages = {};
+    renderPageCalendar();
+}
+
+
 (function () {
     // loadTheme();
     // setLanguage();
