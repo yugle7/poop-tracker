@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
+    <meta name="theme-color" content="#ffffff">
+    <title>Трекер</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<section id="calendar-page" class="screen">
+    <div id="calendar"></div>
+    <h3 id="chosen-day" class="accent center"></h3>
+    <div id="chosen-records"></div>
+</section>
+<section id="stats-page" class="screen hidden">
+    <div>Статистика</div>
+</section>
+<section id="settings-page" class="screen hidden">
+    <div>Настройки</div>
+</section>
+
+<div class="hidden">
+    <div id="calendars"></div>
+</div>
+<nav aria-label="Основная навигация">
+    <div id="nav">
+        <button data-page="calendar" class="to active" aria-label="Календарь" aria-selected="true">
+            <svg>
+                <use href="sprite.svg#calendar"></use>
+            </svg>
+        </button>
+        <button data-page="record" class="to" aria-label="Запись">
+            <svg>
+                <use href="sprite.svg#plus"></use>
+            </svg>
+        </button>
+        <button data-page="stats" class="to" aria-label="Статистика">
+            <svg>
+                <use href="sprite.svg#stats"></use>
+            </svg>
+        </button>
+        <button data-page="settings" class="to" aria-label="Добавить">
+            <svg>
+                <use href="sprite.svg#settings"></use>
+            </svg>
+        </button>
+    </div>
+</nav>
+
+<section id="record-page" class="over hidden">
+    <header class="row">
+        <button id="to-calendar" class="icon" aria-label="Назад">
+            <svg>
+                <use href="sprite.svg#close"></use>
+            </svg>
+        </button>
+        <button id="pooped-date" class="tap" aria-haspopup="dialog"
+                aria-label="Выбрать дату">
+        </button>
+        <button id="pooped-time" class="tap" aria-haspopup="dialog"
+                aria-label="Выбрать время">
+        </button>
+        <button class="green right" id="approve">Создать</button>
+    </header>
+
+    <div class="scroll">
+        <div class="screen col gap">
+            <section>
+                <div id="bristol-label"></div>
+                <br>
+                <div id="bristol-icons" class="row" role="radiogroup" aria-label="Форма по Бристольской шкале"></div>
+            </section>
+
+            <section>
+                <div id="color-label"></div>
+                <br>
+                <div id="color-icons" class="color-grid" role="radiogroup" aria-label="Цвет"></div>
+            </section>
+
+            <section id="volume">
+                <span id="volume-label"></span>
+                <input id="volume-range" type="range" min="0" max="99" step="1" aria-label="Объем от 1 до 5">
+                <span id="volume-value" class="gray small"></span>
+            </section>
+
+            <section>
+                <div class="row add">
+                    <h3>Теги</h3>
+                    <button id="edit-tags" class="right">
+                        <svg>
+                            <use href="sprite.svg#add"></use>
+                        </svg>
+                    </button>
+                </div>
+                <br>
+                <div id="tag-buttons"></div>
+            </section>
+            <button class="red" id="reject">Отменить</button>
+        </div>
+    </div>
+
+    <div id="overlay"></div>
+
+    <div id="tags-editor">
+        <div class="row">
+            <input id="tag" type="text" maxlength="24" placeholder="Новый тег"
+                   aria-label="Название собственного тега">
+            <button id="create-tag" class="right">
+                <svg class="green">
+                    <use href="sprite.svg#add"></use>
+                </svg>
+            </button>
+        </div>
+        <div id="tag-actions"></div>
+        <footer>
+            <button id="close-tags" class="right">Отмена</button>
+            <button id="apply-tags" class="accent">Ok</button>
+        </footer>
+    </div>
+
+    <div id="when-picker">
+        <div id="watch">
+            <button id="day" class="tap"></button>
+            <button id="hour" class="tap"></button>
+            <svg id="colon" viewBox="0 0 6 24" width="6" height="24">
+                <circle cx="3" cy="8" r="1" stroke="var(--text)" fill="none"/>
+                <circle cx="3" cy="16" r="1" stroke="var(--text)" fill="none"/>
+            </svg>
+            <button id="minute" class="tap"></button>
+        </div>
+
+        <div id="clock">
+            <div id="white"></div>
+            <div id="black"></div>
+            <div id="center"></div>
+            <div id="line"></div>
+            <div id="hand"></div>
+        </div>
+
+        <div id="when-calendar">
+            <div class="days">
+                <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+            </div>
+            <div class="days" id="when-days"></div>
+        </div>
+
+        <footer>
+            <button id="when-prev">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <polyline points="14 4 6 12 14 20"/>
+                </svg>
+            </button>
+            <span id="when-month"></span>
+            <button id="when-next">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <polyline points="10 4 18 12 10 20"/>
+                </svg>
+            </button>
+            <button id="close-when" class="right">Отмена</button>
+            <button id="apply-when" class="accent">Ok</button>
+        </footer>
+    </div>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
+
+
+
+
