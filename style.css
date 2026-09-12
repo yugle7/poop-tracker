@@ -1222,7 +1222,7 @@ select {
 #volume-value {
     position: absolute;
     left: 0;
-    bottom: -20px;
+    top: 30px;
 }
 
 #value {

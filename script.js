@@ -80,8 +80,7 @@ const getDate = (date) => date.getFullYear() * 10000 + date.getMonth() * 100 + d
 const getDefaultRecord = () => ({
     pooped: getDate(day) === getDate(today) ? new Date() : day,
     bristol: 4,
-    volumeRange: 50,
-    volume: getVolume(50),
+    volume: 50,
     color: 'brown',
     tags: []
 });
@@ -346,13 +345,13 @@ const renderPageCalendar = () => {
 
 // 1.1 Записи дня
 
-const recordHtml = ({created, pooped, bristol, color, volumeRange, tags}) => {
+const recordHtml = ({created, pooped, bristol, color, volume, tags}) => {
     return `<button class="col" data-created="${created}">
         <div class="row gap-10">${tags.map(q => `<span class="small gray">${q}</span>`).join('')}</div>
         <div class="row gap-15">
             <span class="mono">${getTimeText(pooped)}</span>
             <svg class="img" style="${getColorStyle(color)}"><use href="sprite.svg#bristol-${bristol}"></use></svg>
-            <span class="small gray right">${VOLUMES[Math.floor(volumeRange / 20)]}</span>
+            <span class="small gray right">${VOLUMES[Math.floor(volume / 20)]}</span>
         </div>
     </button>`;
 }
@@ -388,6 +387,7 @@ let width = 0;
 let delta = 0;
 let shift = 0;
 let minShift = 10;
+let maxShift = 40;
 
 const calendars = document.getElementById('calendars');
 
@@ -446,7 +446,7 @@ const stopDragging = e => {
     startX = null;
 
     delta = 0;
-    if (Math.abs(shift) > 50) delta = shift > 0 ? -1 : 1;
+    if (Math.abs(shift) > maxShift) delta = shift > 0 ? -1 : 1;
 
     calendars.style.transition = `transform 0.2s ease`;
     calendars.style.transform = `translateX(-${width + delta * width}px)`;
@@ -591,16 +591,13 @@ colorIcons.addEventListener('click', ({target}) => {
 // 3. Объем
 
 volumeRange.oninput = () => {
-    volumeRange.style.setProperty('--value', `${volumeRange.value}%`);
-    record.volumeRange = volumeRange.value;
-    volumeValue.innerText = getVolume(volumeRange.value) + ' гр';
-    volumeValue.style.left = `calc(${volumeRange.value}% - ${0.45 * volumeRange.value}px)`;
-    record.volume = getVolume(volumeRange.value);
-    volumeLabel.innerText = VOLUMES[Math.floor(volumeRange.value / 20)]
+    record.volume = volumeRange.value;
+    setVolume();
 }
 
 const setVolume = () => {
-    volumeRange.value = record.volumeRange;
+    volumeValue.innerText = getVolume(volumeRange.value) + ' гр';
+    volumeValue.style.left = `calc(${volumeRange.value}% - ${0.45 * volumeRange.value}px)`;
     volumeLabel.innerText = VOLUMES[Math.floor(volumeRange.value / 20)];
     volumeRange.style.setProperty('--value', `${volumeRange.value}%`);
 }
@@ -645,6 +642,7 @@ function setForm() {
             break;
         }
     }
+    volumeRange.value = record.volume;
     setVolume();
     tagButtons.innerHTML = getTagButtonsHtml();
 }
