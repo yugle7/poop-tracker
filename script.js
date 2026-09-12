@@ -390,21 +390,23 @@ let delta = 0;
 const calendars = document.getElementById('calendars');
 
 const renderCalendars = () => {
-    calendars.style.transition = 'none';
+    width = calendar.clientWidth + 20;
+    calendars.style.setProperty('--width', `${calendar.clientWidth}px`);
+
     calendars.replaceChildren(
         getCalendarPage(-1),
         getCalendarPage(),
         getCalendarPage(1)
     );
     calendar.replaceChildren(calendars);
-    width = calendar.clientWidth + 20;
-    calendars.style.setProperty('--width', `${calendar.clientWidth}px`);
+
+    calendars.style.transition = 'none';
     calendars.style.transform = `translateX(-${width}px)`;
 };
 
 calendars.addEventListener('transitionend', () => {
-    calendar.replaceChildren(getCalendarPage(delta));
     addPageMonth(delta);
+    calendar.replaceChildren(getCalendarPage());
 });
 
 calendar.addEventListener('pointerdown', e => {
@@ -434,13 +436,14 @@ const stopDragging = e => {
     if (!dragging) return;
     dragging = false;
 
-    const dx = e.clientX - startX;
+    const dx = e.clientX - startX - width;
     startX = null;
 
+    console.log(dx);
     if (Math.abs(dx) > 50) delta = dx > 0 ? -1 : 1;
 
-    calendars.style.transition = `transform ${150 + 50 * (delta !== 0)}ms ease`;
-    calendars.style.transform = `translateX(-${(1 + delta) * width}px)`;
+    calendars.style.transition = `transform 0.2s ease`;
+    calendars.style.transform = `translateX(-${(1 + delta) * width + 10}px)`;
 };
 
 calendar.addEventListener('pointerup', stopDragging);
