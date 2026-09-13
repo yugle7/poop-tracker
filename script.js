@@ -278,7 +278,6 @@ const getRecord = (date) => {
 
 const getRecordStyle = (color, volume) => {
     const size = Math.min(64, 16 + 16 * volume / 50);
-    console.log(size, volume, person.volume)
     return `width:${size}px;height:${size}px;background:var(--inner-${color})`;
 }
 
@@ -882,7 +881,6 @@ const addMonth = (d) => {
     const m = calendarDate.getMonth();
     calendarDate.setFullYear(calendarDate.getFullYear() + Math.floor((m + d) / 12));
     calendarDate.setMonth((m + d + 12) % 12);
-    console.log(calendarDate)
     renderCalendar();
 }
 
