@@ -1218,6 +1218,7 @@ select {
     flex-wrap: wrap;
     gap: 10px;
     padding: 10px 10px 40px;
+    position: relative;
 }
 
 #tags-editor,
@@ -1441,9 +1442,14 @@ footer {
 }
 
 footer button {
-    padding: 15px 20px;
+    padding: 20px 20px 30px;
     background: transparent;
     font-size: 16px
+}
+
+#when-prev, #when-next  {
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 .accent {
