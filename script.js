@@ -647,6 +647,8 @@ setForm();
 
 // Добавление тегов
 
+const viewport = window.visualViewport;
+
 const openTagsEditor = () => {
     editTagsButton.classList.add('hidden');
     tagActions.innerHTML = getTagActionsHtml();
@@ -654,6 +656,10 @@ const openTagsEditor = () => {
     overlay.classList.add('open');
     tagsEditor.classList.add('open');
     // tagInput.focus({preventScroll: true});
+    if (viewport) {
+        const keyboardHeight = window.innerHeight - viewport.height - viewport.offsetTop;
+        tagsEditor.style.transform = `translateY(${-Math.max(0, keyboardHeight)}px)`;
+    }
 };
 
 editTagsButton.onclick = openTagsEditor;
