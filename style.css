@@ -19,7 +19,7 @@
 }
 
 :root {
-    --inner-white: var(--bg);
+    --inner-white: #ededca;
     --inner-gray: #9d9d98;
     --inner-yellow: #d8c34a;
     --inner-orange: #d98a3a;
@@ -30,8 +30,8 @@
     --inner-green: #638b68;
     --inner-red: #bd5550;
 
-    --outer-white: var(--text);
-    --outer-gray: #514b47;
+    --outer-white: #bfbfa8;
+    --outer-gray: #857d77;
     --outer-yellow: #a47b3d;
     --outer-orange: #8b5d38;
     --outer-light-brown: #744b35;
@@ -73,7 +73,7 @@
         --inner-light-brown: #a76f4d;
         --inner-brown: #79503d;
         --inner-dark-brown: #573b2e;
-        --inner-black: var(--bg);
+        --inner-black: #1c1c1c;
         --inner-green: #709878;
         --inner-red: #c96560;
 
@@ -84,17 +84,9 @@
         --outer-light-brown: #8e5a41;
         --outer-brown: #8e6551;
         --outer-dark-brown: #634738;
-        --outer-black: var(--text);
+        --outer-black: #474747;
         --outer-green: #526d57;
         --outer-red: #874541;
-    }
-
-    .color:nth-child(8) {
-        border: 2px solid gray;
-    }
-
-    .color:nth-child(8).selected {
-        border: none;
     }
 }
 
@@ -210,60 +202,6 @@ h3 {
     /*color: var(--yellow);*/
     /*text-align: center;*/
     /*padding-bottom: 10px;*/
-}
-
-
-.month-actions {
-    display: flex;
-    gap: 4px;
-    font-size: 24px;
-    color: gray;
-    stroke: gray;
-}
-
-.calendar-header {
-    align-items: center
-}
-
-.weekday-row {
-    display: grid;
-    grid-template-columns:repeat(7, 1fr);
-    gap: 4px;
-    color: #8b8b8b;
-    font-size: 11px;
-    text-align: center;
-    margin-bottom: 6px
-}
-
-.calendar-grid {
-    display: grid;
-    grid-template-columns:repeat(7, 1fr);
-    gap: 4px
-}
-
-.day-cell {
-    position: relative;
-    min-height: 58px;
-    border-radius: 15px;
-    background: transparent;
-    display: grid;
-    place-items: center;
-    isolation: isolate
-}
-
-
-.day-cell.today .day-number {
-    /*font-size: 20px;*/
-}
-
-.day-cell.selected {
-    /*background: #eeeeee;*/
-    color: var(--yellow);
-}
-
-.day-number {
-    z-index: 2;
-    font-size: 15px
 }
 
 
@@ -1414,13 +1352,14 @@ select {
 }
 
 .day {
-    height: 38px;
+    height: 45px;
     aspect-ratio: 1;
     padding: 5px;
     background: transparent;
     border-radius: 50%;
     position: relative;
     line-height: 1;
+    font-size: 14px;
 }
 
 small {
@@ -1437,7 +1376,7 @@ i {
     top: 50%;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    opacity: .25;
+    opacity: .7;
 }
 
 .day.today {

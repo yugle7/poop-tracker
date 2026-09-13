@@ -277,12 +277,9 @@ const getRecord = (date) => {
 }
 
 const getRecordStyle = (color, volume) => {
-    const size = Math.min(56, 16 + 12 * volume / person.volume);
-    const style = `width:${size}px;height:${size}px;background:var(--inner-${color})`;
-    if (color === 'white' || color === 'black') {
-        return `${style};border:1px solid var(--outer-${color})`;
-    }
-    return style;
+    const size = Math.min(64, 16 + 24 * volume / 50);
+    console.log(size, volume, person.volume)
+    return `width:${size}px;height:${size}px;background:var(--inner-${color})`;
 }
 
 const getRecordHtml = (
