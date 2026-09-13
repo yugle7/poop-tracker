@@ -653,7 +653,7 @@ const openTagsEditor = () => {
     overlay.onclick = closeTagEditor;
     overlay.classList.add('open');
     tagsEditor.classList.add('open');
-    tagInput.focus({preventScroll: true});
+    // tagInput.focus({preventScroll: true});
 };
 
 editTagsButton.onclick = openTagsEditor;

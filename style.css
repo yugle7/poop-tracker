@@ -1243,6 +1243,7 @@ select {
     font-variant-numeric: tabular-nums;
 }
 
+
 #bristol-label::first-letter {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-variant-numeric: tabular-nums;
@@ -1447,7 +1448,7 @@ footer button {
     font-size: 16px
 }
 
-#when-prev, #when-next  {
+#when-prev, #when-next {
     padding-top: 5px;
     padding-bottom: 5px;
 }
