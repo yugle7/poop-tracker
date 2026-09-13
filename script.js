@@ -655,11 +655,7 @@ const openTagsEditor = () => {
     overlay.onclick = closeTagEditor;
     overlay.classList.add('open');
     tagsEditor.classList.add('open');
-    // tagInput.focus({preventScroll: true});
-    if (viewport) {
-        const keyboardHeight = window.innerHeight - viewport.height - viewport.offsetTop;
-        tagsEditor.style.transform = `translateY(${-Math.max(0, keyboardHeight)}px)`;
-    }
+    tagInput.focus();
 };
 
 editTagsButton.onclick = openTagsEditor;
