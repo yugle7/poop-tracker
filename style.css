@@ -56,7 +56,7 @@
 @media (prefers-color-scheme: dark) {
     :root {
         --bg: #2a2a2a;
-        --text: #e0e0e0;
+        --text: #c8c8c8;
         --head: #333333;
         --line: #444444;
         --fade: #363636;
@@ -1362,6 +1362,11 @@ select {
     font-size: 14px;
 }
 
+#when-picker .day {
+    height: 40px;
+
+}
+
 small {
     position: absolute;
     font-size: 14px;
@@ -1432,6 +1437,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
+    max-height: 50px;
 }
 
 footer button {
