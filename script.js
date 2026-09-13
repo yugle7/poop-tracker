@@ -277,7 +277,7 @@ const getRecord = (date) => {
 }
 
 const getRecordStyle = (color, volume) => {
-    const size = Math.min(64, 16 + 24 * volume / 50);
+    const size = Math.min(64, 16 + 16 * volume / 50);
     console.log(size, volume, person.volume)
     return `width:${size}px;height:${size}px;background:var(--inner-${color})`;
 }
@@ -588,7 +588,7 @@ colorIcons.addEventListener('click', ({target}) => {
 // 3. Объем
 
 volumeRange.oninput = () => {
-    record.volume = volumeRange.value;
+    record.volume = +volumeRange.value;
     setVolume();
 }
 
@@ -639,7 +639,7 @@ function setForm() {
             break;
         }
     }
-    volumeRange.value = record.volume;
+    volumeRange.value = record.volume.toString();
     setVolume();
     tagButtons.innerHTML = getTagButtonsHtml();
 }
