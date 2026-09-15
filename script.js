@@ -157,7 +157,7 @@ const getDateText = (date) => date.getDate() + ' ' + MON[date.getMonth()];
 let record = getDefaultRecord();
 let records = [];
 
-let tags = defaultTags;
+let tags;
 
 // Элементы
 
@@ -683,6 +683,7 @@ const closeTagEditor = () => {
 
 const applyTagEditor = () => {
     tags = [...tagActions.children].map(q => q.innerText);
+    saveTags();
     tagButtons.innerHTML = getTagButtonsHtml();
     closeTagEditor();
 };
@@ -944,6 +945,12 @@ render();
 
 // Загрузка
 
+const loadTags = () => {
+    console.log('loadTags')
+    const t = localStorage.getItem('tags');
+    tags = t ? JSON.parse(t).filter(Boolean) : defaultTags;
+};
+
 const loadRecords = () => {
     console.log('loadRecords')
     const t = localStorage.getItem('records');
@@ -959,6 +966,11 @@ const loadRecord = (created) => {
 const saveRecord = () => {
     console.log('saveRecord');
     localStorage.setItem('records', JSON.stringify(records));
+}
+
+const saveTags = () => {
+    console.log('saveTags');
+    localStorage.setItem('tags', JSON.stringify(tags));
 }
 
 // 2.3
@@ -978,6 +990,7 @@ resetButton.onclick = e => {
 (function () {
     // loadTheme();
     // setLanguage();
+    loadTags();
     loadRecords();
     renderPageCalendar();
     renderChosenRecords();
