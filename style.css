@@ -1049,6 +1049,13 @@ h2 button {
     width: 100%;
 }
 
+#chosen-records .row {
+    flex-wrap: wrap;
+    column-gap: 10px;
+    row-gap: 0;
+    padding: 5px;
+}
+
 input {
     padding: 10px;
 }
@@ -1139,7 +1146,7 @@ select {
 
 #chosen-records > button {
     width: 100%;
-    padding: 15px 0;
+    padding: 10px 0;
 }
 
 .help {
