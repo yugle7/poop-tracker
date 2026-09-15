@@ -1145,9 +1145,6 @@ select {
     font-variant-numeric: tabular-nums;
 }
 
-.days {
-    padding: 5px;
-}
 
 .gap {
     gap: 30px;
@@ -1438,7 +1435,7 @@ i {
 #calendar {
     width: 100%;
     touch-action: pan-y;
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 
 .calendar {
