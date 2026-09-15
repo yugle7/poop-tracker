@@ -1382,7 +1382,7 @@ select {
 
 small {
     position: absolute;
-    font-size: 14px;
+    font-size: 12px;
     right: -3px;
     top: -3px;
     color: gray;
@@ -1413,6 +1413,10 @@ i {
 
 .empty {
     pointer-events: none
+}
+
+.tip {
+    font-size: 12px;
 }
 
 #calendar {
