@@ -88,8 +88,18 @@ const getDefaultRecord = () => ({
 // Константы
 
 
-const defaultTags = ['walk', 'run', 'coffee', 'medication', 'normal', 'constipation', 'diarrhea', 'pain'];
-
+const defaultTags = [
+  'Боль',
+  'Газы',
+  'Вздутие',
+  'Напряжение',
+  'Кофе',
+  'Лекарства',
+  'Прогулка',
+  'Бег',
+  'Стресс',
+  'После еды'
+];
 
 const SCALES = {
     white: 6,
@@ -157,7 +167,7 @@ const getDateText = (date) => date.getDate() + ' ' + MON[date.getMonth()];
 let record = getDefaultRecord();
 let records = [];
 
-let tags;
+let tags = [];
 
 // Элементы
 
@@ -658,8 +668,6 @@ function setForm() {
     tagButtons.innerHTML = getTagButtonsHtml();
 }
 
-setForm();
-
 // Добавление тегов
 
 const viewport = window.visualViewport;
@@ -994,5 +1002,6 @@ resetButton.onclick = e => {
     loadRecords();
     renderPageCalendar();
     renderChosenRecords();
+    setForm();
     // setRecords();
 })();
