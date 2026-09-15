@@ -359,10 +359,10 @@ const recordHtml = ({created, pooped, bristol, color, volume, tags}) => {
         <div class="row">${tags.map(q => `<span class="small gray">${q}</span>`).join('')}</div>
         <div class="record">
             <div class="color" style="${getColorStyle(color)}"></div>
-            <span class="mono gray small">${getTimeText(pooped)}</span>
 <!--            <svg class="img" style="${getColorStyle(color)}"><use href="sprite.svg#bristol-${bristol}"></use></svg>-->
             <div>${BR[bristol - 1]}</div>
             <span class="small gray right">${VOLUMES[Math.floor(volume / 20)]}</span>
+            <span class="mono gray small">${getTimeText(pooped)}</span>
         </div>
     </button>`;
 }

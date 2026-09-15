@@ -1141,7 +1141,12 @@ select {
 }
 
 .mono {
-    font-family: monospace;
+    /*font-family: monospace;*/
+    font-variant-numeric: tabular-nums;
+}
+
+.days {
+    padding: 5px;
 }
 
 .gap {
