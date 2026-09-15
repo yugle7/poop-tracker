@@ -130,6 +130,16 @@ const BRISTOLS = [
     '7 — водянистая, без твердых частей'
 ];
 
+const BR = [
+    'Твердая',
+    'Комковатая',
+    'Потрескавшаяся',
+    'Гладкая',
+    'Мягкая',
+    'Рыхлая',
+    'Водянистая',
+];
+
 const MON = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
 const MONTH = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 const WD = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
@@ -347,9 +357,11 @@ const renderPageCalendar = () => {
 const recordHtml = ({created, pooped, bristol, color, volume, tags}) => {
     return `<button class="col" data-created="${created}">
         <div class="row">${tags.map(q => `<span class="small gray">${q}</span>`).join('')}</div>
-        <div class="row">
-            <span class="mono">${getTimeText(pooped)}</span>
-            <svg class="img" style="${getColorStyle(color)}"><use href="sprite.svg#bristol-${bristol}"></use></svg>
+        <div class="record">
+            <div class="color" style="${getColorStyle(color)}"></div>
+            <span class="mono gray small">${getTimeText(pooped)}</span>
+<!--            <svg class="img" style="${getColorStyle(color)}"><use href="sprite.svg#bristol-${bristol}"></use></svg>-->
+            <div>${BR[bristol - 1]}</div>
             <span class="small gray right">${VOLUMES[Math.floor(volume / 20)]}</span>
         </div>
     </button>`;

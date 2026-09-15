@@ -42,17 +42,6 @@
     --outer-red: #873d3a;
 }
 
-/*[data-theme="dark"] {*/
-@media (prefers-color-scheme: light) {
-    .color:first-child {
-        border: 2px solid gray;
-    }
-
-    .color:first-child.selected {
-        border: none;
-    }
-}
-
 @media (prefers-color-scheme: dark) {
     :root {
         --bg: #2a2a2a;
@@ -434,6 +423,13 @@ input[type=range]::-webkit-slider-runnable-track {
 
 .color {
     width: 40px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--inner);
+}
+
+div.color {
+    width: 30px;
     aspect-ratio: 1;
     border-radius: 50%;
     background: var(--inner);
@@ -1047,6 +1043,14 @@ h2 button {
     flex-direction: row;
     align-items: center;
     width: 100%;
+}
+
+.record {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    width: 100%;
+    gap: 15px;
 }
 
 #chosen-records .row {
