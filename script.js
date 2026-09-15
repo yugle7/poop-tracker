@@ -225,16 +225,21 @@ const addPageMonth = (delta) => {
 }
 
 calendar.addEventListener('click', e => {
-    const button = e.target.closest('button');
-    if (!button || button === chosenButton) return;
+    let button = e.target.closest('button');
+    if (!button) return;
     if (button.id) {
         addPageMonth(button.id === 'prev' ? -1 : 1);
         return calendar.replaceChildren(getCalendarPage());
     }
-    chosenButton.classList.remove('chosen');
-    day = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), +button.dataset.day, 12);
-    button.classList.add('chosen');
+    button = button.firstElementChild;
+    if (button === chosenButton) return;
+
+    chosenButton.classList.remove('big');
     chosenButton = button;
+
+    day = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), +chosenButton.innerText, 12);
+    chosenButton.classList.add('big');
+
     renderChosenRecords();
 });
 
@@ -304,20 +309,18 @@ const getCalendarPage = (delta = 0) => {
     const c = getDate(day);
 
     const getClass = (d) => {
-        let dst = 'day';
-        if (d === c) dst += ' chosen';
-        if (d === t) dst += ' today';
-        if (d > t) dst += ' feature';
-        return dst;
+        if (d === c) return 'big';
+        if (d > t) return 'gray';
+        return '';
     }
 
     const dayHtml = (n) => {
         const d = getDate(new Date(y, m, n));
         const r = getRecord(d);
-        return `<button class="${getClass(d)}" data-day="${n}">${n}${r ? getRecordHtml(r) : ''}</button>`
+        return `<button><span class="${getClass(d)}">${n}</span>${r ? getRecordHtml(r) : ''}</button>`
     }
 
-    let days = WD.map(d => `<span>${d}</span>`).join('') + '<button class="day empty"></button>'.repeat(first);
+    let days = WD.map(d => `<span>${d}</span>`).join('') + '<button class="empty"></button>'.repeat(first);
     for (let i = 1; i <= last; i++) days += dayHtml(i);
 
     calendarPages[k] = document.createElement('DIV');
@@ -335,7 +338,7 @@ const getCalendarPage = (delta = 0) => {
 const renderPageCalendar = () => {
     console.log('renderPageCalendar');
     calendar.replaceChildren(getCalendarPage());
-    chosenButton = calendar.querySelector('.chosen');
+    chosenButton = calendar.getElementsByClassName('big')[1];
 }
 
 
@@ -807,11 +810,15 @@ const renderCalendar = () => {
 
         if (d === selected) return 'selected';
         if (d === today) return 'today';
-        if (d > today) return 'feature';
+        if (d > today) return 'future';
         return '';
     }
-    whenDays.innerHTML = Array(first).fill('<button class="day empty"></button>').join('') +
-        Array.from({length: last}, (_, i) => `<button class="day ${getDayType(i + 1)}">${i + 1}</button>`).join('');
+    const dayHtml = (n) => `<button class="${getDayType(n)}">${n}</button>`;
+
+    let days = '<button class="empty"></button>'.repeat(first);
+    for (let i = 1; i <= last; i++) days += dayHtml(i);
+
+    whenDays.innerHTML = days;
 };
 
 const toDay = () => {

@@ -1105,8 +1105,9 @@ select {
 }
 
 .big {
-    font-size: 20px;
+    font-size: 20px !important;
 }
+
 
 .over {
     position: fixed;
@@ -1348,12 +1349,23 @@ select {
 }
 
 .days span {
-    font-size: 12px;
-    padding: 5px 0;
-    color: #999
+    z-index: 1;
+    position: relative;
+    font-size: 14px;
 }
 
-.day {
+.days > span {
+    font-size: 14px;
+    color: gray;
+}
+
+.days > button > span {
+    font-size: 14px;
+    z-index: 1;
+    position: relative;
+}
+
+.days > button {
     height: 45px;
     aspect-ratio: 1;
     padding: 5px;
@@ -1361,12 +1373,11 @@ select {
     border-radius: 50%;
     position: relative;
     line-height: 1;
-    font-size: 14px;
 }
 
-#when-picker .day {
+#when-picker .days > button {
     height: 40px;
-
+    font-size: 14px;
 }
 
 small {
@@ -1384,26 +1395,23 @@ i {
     transform: translate(-50%, -50%);
     border-radius: 50%;
     opacity: .7;
+    z-index: 0;
 }
 
-.day.today {
+.today {
     color: var(--accent);
 }
 
-.day.feature {
+.future {
     color: gray;
 }
 
-.day.selected {
-    background: var(--accent);
+.days .selected {
+    background: var(--accent) !important;
     color: var(--bg);
 }
 
-.day.chosen {
-    font-size: 28px;
-}
-
-.day.empty {
+.empty {
     pointer-events: none
 }
 
