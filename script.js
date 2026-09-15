@@ -356,7 +356,7 @@ const renderPageCalendar = () => {
 
 const recordHtml = ({created, pooped, bristol, color, volume, tags}) => {
     return `<button class="col" data-created="${created}">
-        <div class="row">${tags.map(q => `<span class="small gray">${q}</span>`).join('')}</div>
+        <div class="tags">${tags.map(q => `<span class="small gray">${q}</span>`).join('')}</div>
         <div class="record">
             <div class="color" style="${getColorStyle(color)}"></div>
 <!--            <svg class="img" style="${getColorStyle(color)}"><use href="sprite.svg#bristol-${bristol}"></use></svg>-->

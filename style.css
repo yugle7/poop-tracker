@@ -182,6 +182,7 @@ h1 {
 h2 {
     width: 100%;
     font-size: 20px;
+    padding: 10px 20px;
 }
 
 
@@ -1050,7 +1051,8 @@ h2 button {
     flex-direction: row;
     align-items: flex-end;
     width: 100%;
-    gap: 15px;
+    gap: 20px;
+    padding: 0 20px;
 }
 
 #chosen-records .row {
@@ -1132,12 +1134,15 @@ select {
     z-index: 10;
 }
 
-.screen {
+.width-500 {
     max-width: 500px;
     width: 100%;
-    padding: 20px;
     margin: 0 auto;
     position: relative;
+}
+
+.pad-20 {
+    padding: 20px;
 }
 
 .mono {
@@ -1146,7 +1151,7 @@ select {
 }
 
 
-.gap {
+.gap-30 {
     gap: 30px;
 }
 
@@ -1346,12 +1351,15 @@ select {
     transform-origin: 0 50%
 }
 
-#when-calendar {
-    width: 280px
-}
-
 #when-month {
     font-size: 18px
+}
+
+.tags {
+    display: flex;
+    column-gap: 10px;
+    flex-wrap: wrap;
+    padding: 7px 20px;
 }
 
 .days {
@@ -1359,6 +1367,7 @@ select {
     grid-template-columns:repeat(7, 1fr);
     text-align: center;
     justify-items: center;
+    padding: 0 20px;
 }
 
 .days span {
@@ -1368,7 +1377,6 @@ select {
 }
 
 .days > span {
-    font-size: 14px;
     color: gray;
 }
 
@@ -1425,7 +1433,11 @@ i {
 }
 
 .empty {
-    pointer-events: none
+    pointer-events: none;
+}
+
+.days > span {
+    padding-bottom: 10px;
 }
 
 .tip {
@@ -1435,11 +1447,11 @@ i {
 #calendar {
     width: 100%;
     touch-action: pan-y;
-    /*overflow: hidden;*/
+    overflow: hidden;
 }
 
 .calendar {
-    height: 340px;
+    height: 360px;
 }
 
 #calendars {
