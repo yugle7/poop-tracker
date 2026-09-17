@@ -1541,7 +1541,7 @@ button {
 
 .v-normal span {
     position: absolute;
-    right: -8px;
+    right: -10px;
     bottom: 0;
     color: var(--help);
     transform: translateX(100%) translateY(40%);
