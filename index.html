@@ -16,7 +16,54 @@
 </section>
 
 <section id="stats-page" class="width-500 pad-20 hidden">
-    <div>Статистика</div>
+    <div id="period">
+        <div></div>
+        <button class="active" data-i="0">Неделя</button>
+        <button data-i="1">Месяц</button>
+        <button data-i="2">Год</button>
+    </div>
+
+    <div id="range">
+        <button type="button" data-add="-1" aria-label="Предыдущий период">‹</button>
+        <span id="range-label"></span>
+        <button type="button" data-add="1" aria-label="Следующий период">›</button>
+    </div>
+
+    <div class="card">
+        <h3 class="row">Теги</h3>
+        <br/>
+        <div class="h-list" id="tags-list"></div>
+    </div>
+
+    <div class="card">
+        <h3 class="row">Цвет</h3>
+        <br/>
+        <div class="h-list" id="color-list"></div>
+    </div>
+
+    <div class="card">
+        <h3 class="row">Форма</h3>
+        <br/>
+        <div class="h-list" id="form-list"></div>
+    </div>
+
+    <div class="card" style="--color: var(--yellow)">
+        <h3 class="row"><span>Бристоль</span><span class="gray">—</span><span class="gray"></span></h3>
+        <br/>
+        <div class="v-chart" id="bristol-chart"></div>
+    </div>
+
+    <div class="card">
+        <h3 class="row"><span>Количество</span><span class="gray">—</span><span class="gray"></span></h3>
+        <br/>
+        <div class="v-chart" id="count-chart"></div>
+    </div>
+
+    <div class="card" style="--color: var(--yellow)">
+        <h3 class="row"><span>Объем</span><span class="gray">—</span><span class="gray"></span></h3>
+        <br/>
+        <div class="v-chart" id="volume-chart"></div>
+    </div>
 </section>
 
 <section id="settings-page" class="width-500 pad-20 hidden col">

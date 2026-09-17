@@ -16,6 +16,10 @@
     --inner: none;
     --outer: gray;
     --width: 100;
+
+    --count: 0;
+    --fails: 0;
+    --total: 1;
 }
 
 :root {
@@ -49,6 +53,7 @@
         --head: #333333;
         --line: #444444;
         --fade: #363636;
+        --help: #838282;
 
         --accent: var(--yellow);
     }
@@ -406,14 +411,6 @@ input[type=range]::-webkit-slider-runnable-track {
     );
 }
 
-.range-labels {
-    display: grid;
-    grid-template-columns:repeat(5, 1fr);
-    font-size: 9px;
-    color: #999;
-    text-align: center;
-    gap: 3px
-}
 
 .color-grid {
     display: grid;
@@ -447,6 +444,7 @@ div.color {
 .center {
     align-content: center;
     text-align: center;
+    justify-content: center;
 }
 
 h2 {
@@ -523,13 +521,11 @@ h2 button {
     margin-bottom: 14px
 }
 
-.bars {
-    height: 220px;
+.row {
     display: grid;
     grid-template-columns:repeat(7, 1fr);
     gap: 6px;
     align-items: end;
-    margin-top: 14px
 }
 
 .bar-item {
@@ -681,66 +677,6 @@ h2 button {
 .bar-item:active .bar-track {
     background: #e6e6e6
 }
-
-.hbar-row > span:first-child {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap
-}
-
-@media (max-width: 380px) {
-    /*.app {*/
-    /*    padding-left: 12px;*/
-    /*    padding-right: 12px*/
-    /*}*/
-    .day-cell {
-        min-height: 52px
-    }
-
-    .volume-dot.size-small {
-        width: 29px;
-        height: 29px
-    }
-
-    .volume-dot.size-medium {
-        width: 38px;
-        height: 38px
-    }
-
-    .volume-dot.size-large {
-        width: 48px;
-        height: 48px
-    }
-
-    .bristol-row {
-        gap: 1px
-    }
-
-    .bristol-btn {
-        min-width: 40px
-    }
-
-    .range-labels {
-        font-size: 8px
-    }
-
-    .hbar-row {
-        grid-template-columns:106px 1fr 34px
-    }
-
-    .record-row {
-        grid-template-columns:48px 24px 1fr min-content
-    }
-
-    .custom-tag-editor {
-        flex-direction: column
-    }
-
-    .custom-tag-editor .small-primary {
-        width: 100%
-    }
-}
-
 
 .when-icon {
     width: 34px;
@@ -1492,4 +1428,223 @@ footer button {
 
 .accent {
     color: var(--accent)
+}
+
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+#period {
+    position: relative;
+    display: flex;
+    width: 260px;
+    height: 46px;
+    padding: 6px;
+    margin: 0 auto 16px;
+    border-radius: 10px;
+    background: var(--head);
+    user-select: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+#period > div {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: calc((100% - 12px) / 3);
+    height: 34px;
+    border-radius: 8px;
+    background: var(--accent);
+    color: var(--bg);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    transition: transform 0.2s ease;
+}
+
+#period > button {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    height: 34px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+}
+
+#period > button.active {
+    color: var(--bg);
+    transition: color 0.2s ease;
+}
+
+#range {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 240px;
+    margin: 0 auto 24px;
+    user-select: none;
+}
+
+#range button {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0 0 2px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+#range button:active {
+    transform: scale(0.94);
+}
+
+#range-label {
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+    display: flex;
+    gap: 10px;
+}
+
+
+.v-chart {
+    position: relative;
+    width: 100%;
+    height: 240px;
+}
+
+.v-chart section {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-bottom: 1px solid var(--line);
+}
+
+.v-normal {
+    position: absolute;
+    left: 0;
+    right: 5px;
+    border-top: 1px dashed var(--line);
+    pointer-events: none;
+    bottom: calc(var(--count) / var(--total) * 100%);
+}
+
+.v-normal span {
+    position: absolute;
+    right: -8px;
+    bottom: 0;
+    color: var(--help);
+    transform: translateX(100%) translateY(40%);
+    font-size: 11px;
+}
+
+.v-row {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    gap: 4px;
+    padding: 0 4px;
+}
+
+.v-col {
+    height: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 0;
+}
+
+.v-bar {
+    width: 100%;
+    max-width: 16px;
+    min-height: 2px;
+    border-radius: 4px 4px 2px 2px;
+    background: var(--color);
+    height: calc(var(--count) / var(--total) * 100%);
+}
+
+.v-number {
+    margin-bottom: 5px;
+    font-size: 11px;
+    color: var(--text);
+}
+
+.v-label {
+    position: absolute;
+    bottom: -30px;
+    font-size: 12px;
+    white-space: nowrap;
+    color: var(--help) !important;
+}
+
+.h-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.h-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.h-label {
+    font-size: 13px;
+    overflow: hidden;
+    white-space: normal;
+    color: var(--help);
+}
+
+.h-value {
+    position: relative;
+    height: 16px;
+}
+
+.h-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 16px;
+    min-width: 2px;
+    border-radius: 2px 4px 4px 2px;
+    overflow: hidden;
+    background: var(--color);
+    width: calc((var(--count) + var(--fails)) / var(--total) * 100%);
+}
+
+.h-number {
+    position: absolute;
+    top: 0;
+    left: calc((var(--count) + var(--fails)) / var(--total) * 100%);
+    margin-left: 10px;
+    font-size: 13px;
+    line-height: 16px;
+    white-space: nowrap;
+    color: var(--text);
+}
+
+.card {
+    padding: 0 30px 70px 0;
+}
+
+.empty {
+    text-align: center;
+    color: var(--help);
+    font-size: 13px;
+    padding: 24px 0;
 }

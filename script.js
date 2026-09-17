@@ -89,16 +89,16 @@ const getDefaultRecord = () => ({
 
 
 const defaultTags = [
-  'Боль',
-  'Газы',
-  'Вздутие',
-  'Напряжение',
-  'Кофе',
-  'Лекарства',
-  'Прогулка',
-  'Бег',
-  'Стресс',
-  'После еды'
+    'Боль',
+    'Газы',
+    'Вздутие',
+    'Напряжение',
+    'Кофе',
+    'Лекарства',
+    'Прогулка',
+    'Бег',
+    'Стресс',
+    'После еды'
 ];
 
 const SCALES = {
@@ -153,6 +153,7 @@ const BR = [
 const MON = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
 const MONTH = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 const WD = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+const MN = ['Я', 'Ф', 'М', 'А', 'М', 'И', 'И', 'А', 'С', 'О', 'Н', 'Д'];
 
 // Инструменты
 
@@ -994,6 +995,319 @@ resetButton.onclick = e => {
     renderPageCalendar();
 }
 
+// 3. Статистика
+
+const periodArea = document.getElementById('period');
+const indicator = periodArea.children[0];
+let active = periodArea.children[1];
+
+const rangeArea = document.getElementById('range');
+const rangeLabel = document.getElementById('range-label');
+
+const W = 0;
+const M = 1;
+const Y = 2;
+
+
+let period = W;
+let currentDate = new Date();
+
+const startOfDay = date => {
+    date = new Date(date);
+    date.setHours(0, 0, 0, 0);
+    return date;
+};
+
+const endOfDay = date => {
+    date = new Date(date);
+    date.setHours(23, 59, 59, 999);
+    return date;
+};
+
+const getMonday = (date) => {
+    date = new Date(date);
+    const day = date.getDay();
+    const d = day === 0 ? 6 : day - 1;
+    date.setDate(date.getDate() - d);
+    date.setHours(0, 0, 0, 0);
+    return date;
+}
+
+const getRange = (date) => {
+    date = startOfDay(date);
+
+    if (period === W) {
+        const start = getMonday(date);
+        const end = new Date(start);
+        end.setDate(end.getDate() + 7);
+        return [start, end];
+    }
+
+    if (period === M) {
+        const start = getMonday(new Date(date.getFullYear(), date.getMonth(), 1));
+        const end = getMonday(new Date(date.getFullYear(), date.getMonth() + 1, 0));
+        end.setDate(end.getDate() + 7);
+        return [start, end];
+    }
+
+    const start = new Date(date.getFullYear(), 0, 1);
+    const end = new Date(date.getFullYear() + 1, 0, 1);
+    return [start, end];
+}
+
+const formatDate = (date) => date.getDate() + ' ' + MON[date.getMonth()];
+
+function renderRange() {
+    if (period === W) {
+        const [start, end] = getRange(currentDate);
+        rangeLabel.innerHTML =
+            `<span>${formatDate(start)}</span><span>—</span><span>${formatDate(end)}</span>`;
+    }
+    else if (period === M) rangeLabel.innerHTML = MONTH[currentDate.getMonth()];
+    else rangeLabel.innerHTML = currentDate.getFullYear().toString();
+}
+
+function shiftRange(direction) {
+    if (period === W) {
+        currentDate.setDate(currentDate.getDate() + direction * 7);
+    } else if (period === M) {
+        currentDate.setDate(1);
+        currentDate.setMonth(currentDate.getMonth() + direction);
+    } else {
+        currentDate.setDate(1);
+        currentDate.setMonth(0);
+        currentDate.setFullYear(currentDate.getFullYear() + direction);
+    }
+    renderRange();
+}
+
+function getBuckets(start, end) {
+    const buckets = [];
+
+    if (period === W) {
+        for (let i = 0; i < 7; i++) {
+            buckets.push({label: WD[i], start: new Date(start), end: endOfDay(start)});
+            start.setDate(start.getDate() + 1);
+        }
+    } else if (period === M) {
+        const s = new Date(start);
+        while (s < end) {
+            const e = new Date(s);
+            e.setDate(e.getDate() + 7);
+            buckets.push({
+                label: s.getDate(),
+                start: new Date(s),
+                end: e
+            });
+            s.setDate(s.getDate() + 7);
+        }
+    } else {
+        for (let m = 0; m < 12; m++) {
+            const s = new Date(start.getFullYear(), m, 1);
+            const e = new Date(start.getFullYear(), m + 1, 0);
+            buckets.push({label: MN[m], start: s, end: endOfDay(e)});
+        }
+    }
+    console.log(buckets)
+
+    return buckets;
+}
+
+function bucketize(records, buckets) {
+    return buckets.map(b => records.filter(({pooped}) => {
+        const d = new Date(pooped);
+        return d >= b.start && d <= b.end;
+    }));
+}
+
+function renderHList(id, entries) {
+    const container = document.getElementById(id);
+
+    if (!entries.length) {
+        container.innerHTML = '<div class="empty">Нет данных за период</div>';
+        container.style.removeProperty('--total');
+        return;
+    }
+
+    const total = Math.max(...entries.map(e => e.count));
+    container.style.setProperty('--total', total.toString());
+
+    container.innerHTML = entries.map(e => {
+        return `
+                <div class="h-col" style="--color: var(${e.color})">
+                    <div class="h-label">${e.label}</div>
+                    <div class="h-value" style="--count: ${e.count}">
+                        <div class="h-bar"></div>
+                        <span class="h-number">${e.count}</span>
+                    </div>
+                </div>
+            `;
+    }).join('');
+}
+
+function renderVChart(id, buckets, values, decimals = 1, normal = 0, color = 'blue', value = 0) {
+    const container = document.getElementById(id);
+
+    console.log(container)
+    console.log(container.previousElementSibling)
+    container.parentElement.firstElementChild.lastElementChild.innerText = Math.round(value * decimals) / decimals;
+
+    if (!values.some(v => v != null && v > 0)) {
+        container.innerHTML = '<div class="empty">Нет данных за период</div>';
+        return;
+    }
+
+    const total = Math.max(...values.filter(v => v != null && v > 0), normal) * 1.08;
+
+    const barsHtml = buckets.map((b, i) => {
+        const v = values[i];
+        if (v == null || v === 0) {
+            return `<div class="v-col"><span class="v-label">${b.label}</span></div>`;
+        }
+        const number = Math.round(v * decimals) / decimals;
+        return `
+                <div class="v-col" style="--count: ${v}">
+                    <span class="v-number">${number}</span>
+                    <div class="v-bar"></div>
+                    <span class="v-label">${b.label}</span>
+                </div>
+            `;
+    }).join('');
+
+    const normalHtml = normal != null && normal > 0
+        ? `<span class="v-normal" style="--count: ${normal}">
+                   <span>${Math.round(normal * decimals) / decimals}</span>
+               </span>`
+        : '';
+
+    container.innerHTML = `
+            <section style="--total: ${total}; --color: var(--${color})">
+                ${normalHtml}
+                <div class="v-row">${barsHtml}</div>
+            </section>
+        `;
+}
+
+function renderTags(records) {
+    const map = new Map();
+    records.forEach(r => {
+        (r.tags || []).forEach(tag => {
+            map.set(tag, (map.get(tag) || 0) + 1);
+        });
+    });
+
+    const entries = [...map.entries()]
+        .map(([label, count]) => ({label, count, color: '--blue'}))
+        .sort((a, b) => b.count - a.count);
+
+    renderHList('tags-list', entries);
+}
+
+function renderColor(records) {
+    const map = new Map();
+    records.forEach(r => map.set(r.color, (map.get(r.color) || 0) + 1));
+
+    const entries = [...map.entries()]
+        .map(([key, count]) => ({
+            key,
+            count,
+            label: COLORS[key] || key,
+            color: `--inner-${key}`
+        }))
+        .sort((a, b) => b.count - a.count);
+
+    renderHList('color-list', entries);
+}
+
+function renderForm(records) {
+    const map = new Map();
+    records.forEach(r => map.set(r.bristol, (map.get(r.bristol) || 0) + 1));
+
+    const entries = [...map.entries()]
+        .map(([bristol, count]) => ({
+            key: bristol,
+            count,
+            label: BR[bristol - 1],
+            color: '--blue'
+        }))
+        .sort((a, b) => a.key - b.key);
+
+    renderHList('form-list', entries);
+}
+
+function renderBristol(records, buckets) {
+    const groups = bucketize(records, buckets);
+    const values = groups.map(g => {
+        if (!g.length) return null;
+        return g.reduce((s, r) => s + r.bristol, 0) / g.length;
+    });
+
+    const value = records.length ? records.reduce((s, r) => s + r.bristol, 0) / records.length : 0;
+    renderVChart('bristol-chart', buckets, values, 2, 4, 'yellow', value);
+}
+
+const getNormal = (value) => {
+    if (period === W) return value;
+    if (period === M) return value * 7;
+    return value * 30;
+}
+
+function renderCount(records, buckets) {
+    const groups = bucketize(records, buckets);
+    const values = groups.map(g => g.length);
+    const value = records.length;
+    const normal = getNormal(0.8);
+    renderVChart('count-chart', buckets, values, 10, normal, 'blue', value);
+}
+
+function renderVolume(records, buckets) {
+    const groups = bucketize(records, buckets);
+    const values = groups.map(g => g.length ? g.reduce((s, r) => s + getVolume(r.volume), 0) : null);
+    const value = records.length ? records.reduce((s, r) => s + getVolume(r.volume), 0) : null;
+    const normal = getNormal(0.8 * getVolume(50));
+    renderVChart('volume-chart', buckets, values, 1, normal, 'yellow', value);
+}
+
+function renderStats() {
+    const [start, end] = getRange(currentDate);
+
+    const dst = records.filter(r => {
+        const d = new Date(r.pooped);
+        return d >= start && d < end;
+    });
+
+    const buckets = getBuckets(start, end);
+
+    renderTags(dst);
+    renderColor(dst);
+    renderForm(dst);
+    renderBristol(dst, buckets);
+    renderCount(dst, buckets);
+    renderVolume(dst, buckets);
+}
+
+rangeArea.addEventListener('click', e => {
+    const button = e.target.closest('button');
+    if (!button) return;
+    shiftRange(+button.dataset.add);
+    renderStats();
+});
+
+periodArea.onclick = e => {
+    const button = e.target.closest('button');
+    if (!button || button === active) return;
+
+    active.classList.remove('active');
+    active = button;
+    active.classList.add('active');
+    indicator.style.transform = `translateX(${active.dataset.i * 100}%)`;
+
+    period = +button.dataset.i;
+    currentDate = new Date();
+    renderRange();
+    renderStats();
+};
+
 
 (function () {
     // loadTheme();
@@ -1003,5 +1317,7 @@ resetButton.onclick = e => {
     renderPageCalendar();
     renderChosenRecords();
     setForm();
+    renderRange();
+    renderStats();
     // setRecords();
 })();
