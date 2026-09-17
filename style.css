@@ -1107,8 +1107,11 @@ select {
     padding: 10px;
 }
 
+.gap-8 {
+    gap: 8px;
+}
 .gap-10 {
-    gap: 15px;
+    gap: 10px;
 }
 
 .gap-15 {
