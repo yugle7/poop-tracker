@@ -131,6 +131,7 @@ const COLORS = {
 const VOLUMES = ['Очень мало', 'Мало', 'Средне', 'Много', 'Очень много'];
 
 const BRISTOLS = [
+    'Ничего не вышло',
     '1 — отдельные твердые комочки',
     '2 — колбаска с комочками',
     '3 — колбаска с трещинами',
@@ -141,6 +142,7 @@ const BRISTOLS = [
 ];
 
 const BR = [
+    'Ничего',
     'Твердая',
     'Комковатая',
     'Потрескавшаяся',
@@ -206,11 +208,14 @@ nav.onclick = e => {
     toggle();
     page = pages[button.dataset.page];
     link = button;
-    toggle();
     if (page === pages.record) {
         record = getDefaultRecord();
         setForm();
+    } else if (page === pages.stats) {
+        renderRange();
+        renderStats();
     }
+    toggle();
 }
 
 const toCalendarPage = () => {
@@ -267,7 +272,7 @@ calendar.addEventListener('click', e => {
 let calendarPages = {};
 
 const getRecord = (date) => {
-    const src = records.filter(({pooped}) => getDate(pooped) === date)
+    const src = records.filter(({pooped, bristol}) => bristol && getDate(pooped) === date)
     if (!src.length) return null;
 
     if (src.length === 1) {
@@ -369,9 +374,8 @@ const recordHtml = ({created, pooped, bristol, color, volume, tags}) => {
     return `<button class="col" data-created="${created}">
         <div class="tags">${tags.map(q => `<span class="small gray">${q}</span>`).join('')}</div>
         <div class="record">
-            <div class="color" style="${getColorStyle(color)}"></div>
-<!--            <svg class="img" style="${getColorStyle(color)}"><use href="sprite.svg#bristol-${bristol}"></use></svg>-->
-            <div>${BR[bristol - 1]}</div>
+            <div class="color" style="${bristol ? getColorStyle(color) : '--inner: var(--blue)'}"></div>
+            <div>${BR[bristol]}</div>
             <span class="small gray right">${VOLUMES[Math.floor(volume / 20)]}</span>
             <span class="mono gray small">${getTimeText(pooped)}</span>
         </div>
@@ -554,7 +558,7 @@ approveAction.onclick = (e) => {
 
 let bristolIcon;
 
-bristolIcons.innerHTML = [1, 2, 3, 4, 5, 6, 7].map(bristol => `<button class="icon" role="radio" aria-label="${bristol}"><svg  class="img"><use href="sprite.svg#bristol-${bristol}"></use></svg></button>`).join('');
+bristolIcons.innerHTML = [0, 1, 2, 3, 4, 5, 6, 7].map(bristol => `<button class="icon" role="radio" aria-label="${bristol}"><svg  class="img"><use href="sprite.svg#bristol-${bristol}"></use></svg></button>`).join('');
 
 const setBristol = (icon) => {
     if (icon === bristolIcon) return;
@@ -567,11 +571,16 @@ const setBristol = (icon) => {
     bristolIcon = icon;
 
     record.bristol = +bristolIcon.ariaLabel;
-    bristolLabel.innerText = BRISTOLS[record.bristol - 1];
+    bristolLabel.innerText = BRISTOLS[record.bristol];
 
     bristolIcon.classList.add('selected');
-    bristolIcon.style.setProperty('--inner', `var(--inner-${record.color})`);
-    bristolIcon.style.setProperty('--outer', `var(--outer-${record.color})`);
+
+    if (record.bristol) {
+        bristolIcon.style.setProperty('--inner', `var(--inner-${record.color})`);
+        bristolIcon.style.setProperty('--outer', `var(--outer-${record.color})`);
+    } else {
+        bristolIcon.style.setProperty('--outer', `var(--blue)`);
+    }
 }
 
 bristolIcons.addEventListener('click', ({target}) => {
@@ -1062,8 +1071,7 @@ function renderRange() {
         const [start, end] = getRange(currentDate);
         rangeLabel.innerHTML =
             `<span>${formatDate(start)}</span><span>—</span><span>${formatDate(end)}</span>`;
-    }
-    else if (period === M) rangeLabel.innerHTML = MONTH[currentDate.getMonth()];
+    } else if (period === M) rangeLabel.innerHTML = MONTH[currentDate.getMonth()];
     else rangeLabel.innerHTML = currentDate.getFullYear().toString();
 }
 
@@ -1120,6 +1128,7 @@ function bucketize(records, buckets) {
     }));
 }
 
+
 function renderHList(id, entries) {
     const container = document.getElementById(id);
 
@@ -1133,17 +1142,43 @@ function renderHList(id, entries) {
     container.style.setProperty('--total', total.toString());
 
     container.innerHTML = entries.map(e => {
+        const fails = e.fails || 0;
         return `
                 <div class="h-col" style="--color: var(${e.color})">
                     <div class="h-label">${e.label}</div>
                     <div class="h-value" style="--count: ${e.count}">
-                        <div class="h-bar"></div>
+                        <div class="h-bar ${fails ? 'split' : ''}" style="--fails: ${fails}"></div>
                         <span class="h-number">${e.count}</span>
                     </div>
                 </div>
             `;
     }).join('');
 }
+
+// function renderHList(id, entries) {
+//     const container = document.getElementById(id);
+//
+//     if (!entries.length) {
+//         container.innerHTML = '<div class="empty">Нет данных за период</div>';
+//         container.style.removeProperty('--total');
+//         return;
+//     }
+//
+//     const total = Math.max(...entries.map(e => e.count));
+//     container.style.setProperty('--total', total.toString());
+//
+//     container.innerHTML = entries.map(e => {
+//         return `
+//                 <div class="h-col" style="--color: var(${e.color})">
+//                     <div class="h-label">${e.label}</div>
+//                     <div class="h-value" style="--count: ${e.count}">
+//                         <div class="h-bar"></div>
+//                         <span class="h-number">${e.count}</span>
+//                     </div>
+//                 </div>
+//             `;
+//     }).join('');
+// }
 
 function renderVChart(id, buckets, values, decimals = 1, normal = 0, color = 'blue', value = 0) {
     const container = document.getElementById(id);
@@ -1189,15 +1224,22 @@ function renderVChart(id, buckets, values, decimals = 1, normal = 0, color = 'bl
 }
 
 function renderTags(records) {
-    const map = new Map();
+    const counts = new Map();
+    const fails = new Map();
     records.forEach(r => {
         (r.tags || []).forEach(tag => {
-            map.set(tag, (map.get(tag) || 0) + 1);
+            counts.set(tag, (counts.get(tag) || 0) + 1);
+            if (!r.bristol) fails.set(tag, (fails.get(tag) || 0) + 1);
         });
     });
 
-    const entries = [...map.entries()]
-        .map(([label, count]) => ({label, count, color: '--blue'}))
+    const entries = [...counts.entries()]
+        .map(([label, count]) => ({
+            label,
+            count,
+            fails: fails.get(label),
+            color: '--yellow'
+        }))
         .sort((a, b) => b.count - a.count);
 
     renderHList('tags-list', entries);
@@ -1208,11 +1250,10 @@ function renderColor(records) {
     records.forEach(r => map.set(r.color, (map.get(r.color) || 0) + 1));
 
     const entries = [...map.entries()]
-        .map(([key, count]) => ({
-            key,
+        .map(([color, count]) => ({
+            label: COLORS[color],
             count,
-            label: COLORS[key] || key,
-            color: `--inner-${key}`
+            color: `--inner-${color}`
         }))
         .sort((a, b) => b.count - a.count);
 
@@ -1225,12 +1266,11 @@ function renderForm(records) {
 
     const entries = [...map.entries()]
         .map(([bristol, count]) => ({
-            key: bristol,
+            label: BR[bristol],
             count,
-            label: BR[bristol - 1],
             color: '--blue'
         }))
-        .sort((a, b) => a.key - b.key);
+        .sort((a, b) => b.count - a.count);
 
     renderHList('form-list', entries);
 }
@@ -1275,15 +1315,15 @@ function renderStats() {
         const d = new Date(r.pooped);
         return d >= start && d < end;
     });
-
+    const success = dst.filter(r => r.bristol);
     const buckets = getBuckets(start, end);
 
     renderTags(dst);
-    renderColor(dst);
+    renderColor(success);
     renderForm(dst);
-    renderBristol(dst, buckets);
-    renderCount(dst, buckets);
-    renderVolume(dst, buckets);
+    renderBristol(success, buckets);
+    renderCount(success, buckets);
+    renderVolume(success, buckets);
 }
 
 rangeArea.addEventListener('click', e => {
@@ -1317,7 +1357,5 @@ periodArea.onclick = e => {
     renderPageCalendar();
     renderChosenRecords();
     setForm();
-    renderRange();
-    renderStats();
     // setRecords();
 })();

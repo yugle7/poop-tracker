@@ -25,14 +25,15 @@
 
     <div id="range">
         <button type="button" data-add="-1" aria-label="Предыдущий период">
-            <svg viewBox="0 0 24 24" width="24" height="24">
-                <polyline points="14 4 6 12 14 20"/>
+            <svg>
+                <use href="sprite.svg#prev"></use>
+
             </svg>
         </button>
         <span id="range-label"></span>
         <button type="button" data-add="1" aria-label="Следующий период">
-            <svg viewBox="0 0 24 24" width="24" height="24">
-                <polyline points="10 4 18 12 10 20"/>
+            <svg>
+                <use href="sprite.svg#next"></use>
             </svg>
         </button>
     </div>
@@ -240,14 +241,14 @@
 
         <footer>
             <button id="when-prev">
-                <svg viewBox="0 0 24 24" width="24" height="24">
-                    <polyline points="14 4 6 12 14 20"/>
+                <svg>
+                    <use href="sprite.svg#prev"></use>
                 </svg>
             </button>
             <span id="when-month"></span>
             <button id="when-next">
-                <svg viewBox="0 0 24 24" width="24" height="24">
-                    <polyline points="10 4 18 12 10 20"/>
+                <svg>
+                    <use href="sprite.svg#next"></use>
                 </svg>
             </button>
             <button id="close-when" class="right">Отмена</button>

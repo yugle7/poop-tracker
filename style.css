@@ -1,6 +1,7 @@
 :root {
     --bg: #f7f6f4;
     --text: #4d5156;
+    --icon: #5f646e;
     --head: white;
     --line: #e7e7e7;
     --fade: #fafafa;
@@ -51,6 +52,7 @@
         --bg: #2a2a2a;
         --text: #c8c8c8;
         --head: #333333;
+        --icon: #bcb6a6;
         --line: #444444;
         --fade: #363636;
         --help: #838282;
@@ -60,27 +62,27 @@
 
 
     :root {
-        --inner-white: #e8e8e3;
-        --inner-gray: #aaa9a4;
-        --inner-yellow: #e0c957;
-        --inner-orange: #df9347;
-        --inner-light-brown: #a76f4d;
-        --inner-brown: #79503d;
-        --inner-dark-brown: #573b2e;
-        --inner-black: #1c1c1c;
-        --inner-green: #709878;
-        --inner-red: #c96560;
+        --inner-white: #bcbcb7;
+        --inner-gray: #94938f;
+        --inner-yellow: #c2ae51;
+        --inner-orange: #c47e42;
+        --inner-light-brown: #9d6a4c;
+        --inner-brown: #704938;
+        --inner-dark-brown: #50372d;
+        --inner-black: #3b3a39;
+        --inner-green: #68866f;
+        --inner-red: #b65f5a;
 
-        --outer-white: #8f867f;
-        --outer-gray: #68625e;
-        --outer-yellow: #a77e40;
-        --outer-orange: #945f3c;
-        --outer-light-brown: #8e5a41;
-        --outer-brown: #8e6551;
-        --outer-dark-brown: #634738;
-        --outer-black: #474747;
-        --outer-green: #526d57;
-        --outer-red: #874541;
+        --outer-white: #817d78;
+        --outer-gray: #696763;
+        --outer-yellow: #8f7c3f;
+        --outer-orange: #95613b;
+        --outer-light-brown: #80543e;
+        --outer-brown: #886049;
+        --outer-dark-brown: #674a3a;
+        --outer-black: #5a5753;
+        --outer-green: #536c59;
+        --outer-red: #884844;
     }
 }
 
@@ -295,9 +297,8 @@ svg {
     fill: none;
     stroke-linecap: round;
     stroke-linejoin: round;
-    stroke: lightgray;
+    stroke: var(--icon);
     cursor: pointer;
-    stroke: gray;
 }
 
 
@@ -1110,6 +1111,7 @@ select {
 .gap-8 {
     gap: 8px;
 }
+
 .gap-10 {
     gap: 10px;
 }
@@ -1444,7 +1446,7 @@ button {
     height: 46px;
     padding: 6px;
     margin: 0 auto 16px;
-    border-radius: 10px;
+    border-radius: 14px;
     background: var(--head);
     user-select: none;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
@@ -1452,11 +1454,11 @@ button {
 
 #period > div {
     position: absolute;
-    top: 6px;
+    top: 4px;
     left: 6px;
     width: calc((100% - 12px) / 3);
-    height: 34px;
-    border-radius: 8px;
+    height: 38px;
+    border-radius: 10px;
     background: var(--accent);
     color: var(--bg);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
@@ -1627,7 +1629,15 @@ button {
     border-radius: 2px 4px 4px 2px;
     overflow: hidden;
     background: var(--color);
-    width: calc((var(--count) + var(--fails)) / var(--total) * 100%);
+    width: calc(var(--count) / var(--total) * 100%);
+}
+
+.split {
+    background: linear-gradient(
+            to right,
+            var(--yellow) calc((var(--count) - var(--fails)) / var(--count) * 100%),
+            var(--blue) calc((var(--count) - var(--fails)) / var(--count) * 100%)
+    );
 }
 
 .h-number {
@@ -1650,4 +1660,11 @@ button {
     color: var(--help);
     font-size: 13px;
     padding: 24px 0;
+}
+
+#settings-page a,
+#settings-page button {
+    display: flex;
+    gap: 10px;
+    padding: 15px 0;
 }
