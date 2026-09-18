@@ -658,7 +658,7 @@ function setForm() {
         approveAction.innerText = 'Обновить';
     } else {
         rejectAction.innerText = 'Отменить';
-        approveAction.innerText = 'Добавить';
+        approveAction.innerText = 'Создать';
     }
 
     for (const icon of bristolIcons.children) {
