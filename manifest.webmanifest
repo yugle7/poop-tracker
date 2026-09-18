@@ -38,55 +38,5 @@
       "purpose": "maskable"
     }
   ],
-  "screenshots": [
-    {
-      "src": "/poop-tracker/screenshots/calendar.webp",
-      "type": "image/webp",
-      "sizes": "750x1334",
-      "form_factor": "narrow",
-      "platform": "play",
-      "label": "Календарь записей"
-    },
-    {
-      "src": "/poop-tracker/screenshots/record.webp",
-      "type": "image/webp",
-      "sizes": "750x1334",
-      "form_factor": "narrow",
-      "platform": "play",
-      "label": "Создание записи"
-    },
-    {
-      "src": "/poop-tracker/screenshots/time.webp",
-      "type": "image/webp",
-      "sizes": "750x1334",
-      "form_factor": "narrow",
-      "platform": "play",
-      "label": "Выбор даты и времени"
-    },
-    {
-      "src": "/poop-tracker/screenshots/stats.webp",
-      "type": "image/webp",
-      "sizes": "750x1334",
-      "form_factor": "narrow",
-      "platform": "play",
-      "label": "Статистика за период"
-    },
-    {
-      "src": "/poop-tracker/screenshots/charts.webp",
-      "type": "image/webp",
-      "sizes": "750x1334",
-      "form_factor": "narrow",
-      "platform": "play",
-      "label": "Графики формы и объема"
-    },
-    {
-      "src": "/poop-tracker/screenshots/settings.webp",
-      "type": "image/webp",
-      "sizes": "750x1334",
-      "form_factor": "narrow",
-      "platform": "play",
-      "label": "Настройки"
-    }
-  ],
   "prefer_related_applications": false
 }
