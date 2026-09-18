@@ -93,7 +93,7 @@ const translations = {
         ms: ['Я', 'Ф', 'М', 'А', 'М', 'И', 'И', 'А', 'С', 'О', 'Н', 'Д']
     },
     en: {
-        appName: "Poop Tracker",
+        appName: "Kakaha",
         week: "Week",
         month: "Month",
         year: "Year",

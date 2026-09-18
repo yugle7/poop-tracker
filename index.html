@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#2a2a2a"/>
     <meta name="msapplication-config" content="none">
 
-    <title data-i18n="appName">PoopTracker</title>
+    <title data-i18n="appName"></title>
 
     <link rel="canonical" href="https://yugle7.github.io/poop-tracker/"/>
     <link rel="manifest" href="manifest.webmanifest"/>
@@ -30,23 +30,21 @@
 <section id="stats-page" class="width-500 pad-20 hidden">
     <div id="period">
         <div></div>
-        <button class="active" data-i="0" data-i18n="week">Неделя</button>
-        <button data-i="1" data-i18n="month">Месяц</button>
-        <button data-i="2" data-i18n="year">Год</button>
+        <button class="active" data-i="0" data-i18n="week"></button>
+        <button data-i="1" data-i18n="month"></button>
+        <button data-i="2" data-i18n="year"></button>
     </div>
 
     <div id="range">
         <button type="button" data-add="-1"
-                data-i18n-aria-label="previousPeriod"
-                aria-label="Предыдущий период">
+                data-i18n-aria-label="previousPeriod">
             <svg>
                 <use href="sprite.svg#prev"></use>
             </svg>
         </button>
         <span id="range-label"></span>
         <button type="button" data-add="1"
-                data-i18n-aria-label="nextPeriod"
-                aria-label="Следующий период">
+                data-i18n-aria-label="nextPeriod">
             <svg>
                 <use href="sprite.svg#next"></use>
             </svg>
@@ -54,26 +52,26 @@
     </div>
 
     <div class="card">
-        <h3 data-i18n="tags">Теги</h3>
+        <h3 data-i18n="tags"></h3>
         <br/>
         <div class="h-list" id="tags-list"></div>
     </div>
 
     <div class="card">
-        <h3 data-i18n="color">Цвет</h3>
+        <h3 data-i18n="color"></h3>
         <br/>
         <div class="h-list" id="color-list"></div>
     </div>
 
     <div class="card">
-        <h3 data-i18n="shape">Форма</h3>
+        <h3 data-i18n="shape"></h3>
         <br/>
         <div class="h-list" id="shape-list"></div>
     </div>
 
     <div class="card" style="--color: var(--yellow)">
         <h3 class="row gap-8">
-            <span data-i18n="bristol">Бристоль</span>
+            <span data-i18n="bristol"></span>
             <span class="gray">—</span>
             <span class="gray"></span>
         </h3>
@@ -83,7 +81,7 @@
 
     <div class="card">
         <h3 class="row gap-8">
-            <span data-i18n="count">Количество</span>
+            <span data-i18n="count"></span>
             <span class="gray">—</span>
             <span class="gray"></span>
         </h3>
@@ -93,7 +91,7 @@
 
     <div class="card" style="--color: var(--yellow)">
         <h3 class="row gap-8">
-            <span data-i18n="volume">Объем</span>
+            <span data-i18n="volume"></span>
             <span class="gray">—</span>
             <span class="gray"></span>
         </h3>
@@ -103,34 +101,32 @@
 </section>
 
 <section id="settings-page" class="width-500 pad-20 hidden col">
-    <a href="https://www.tbank.ru/cf/3sEawgoGUDe" target="_blank"
-       class="row gap-10 pad-10">
+    <a class="row gap-10 pad-10" href="https://www.tbank.ru/cf/3sEawgoGUDe" target="_blank">
         <svg class="icon">
             <use href="sprite.svg#heart"></use>
         </svg>
-        <span data-i18n="support">Сказать спасибо</span>
+        <span data-i18n="support"></span>
     </a>
 
     <a class="row gap-10 pad-10" href="mailto:yuzhakov.gleb@gmail.com?subject=PoopTracker">
         <svg class="icon">
             <use href="sprite.svg#chat"></use>
         </svg>
-        <span data-i18n="mailTo">Написать нам</span>
+        <span data-i18n="mailTo"></span>
     </a>
 
-    <a href="https://yugle7.github.io/poop-tracker/privacy.html" target="_blank"
-       class="row gap-10 pad-10">
+    <a class="row gap-10 pad-10" href="https://yugle7.github.io/poop-tracker/privacy.html" target="_blank">
         <svg class="icon">
             <use href="sprite.svg#shield"></use>
         </svg>
-        <span data-i18n="privacy">Политика конфиденциальности</span>
+        <span data-i18n="privacy"></span>
     </a>
 
     <button id="reset" class="left row gap-10 pad-10">
         <svg class="icon">
             <use href="sprite.svg#reset"></use>
         </svg>
-        <span data-i18n="reset">Сбросить данные</span>
+        <span data-i18n="reset"></span>
     </button>
 </section>
 
@@ -138,35 +134,27 @@
     <div id="calendars"></div>
 </div>
 
-<nav data-i18n-aria-label="mainNavigation" aria-label="Основная навигация">
+<nav data-i18n-aria-label="mainNavigation">
     <div id="nav">
-        <button data-page="calendar" class="pad-10 active"
-                data-i18n-aria-label="calendar"
-                aria-label="Календарь" aria-selected="true">
+        <button data-page="calendar" class="pad-10 active" data-i18n-aria-label="calendar" aria-selected="true">
             <svg>
                 <use href="sprite.svg#calendar"></use>
             </svg>
         </button>
 
-        <button data-page="record" class="pad-10"
-                data-i18n-aria-label="record"
-                aria-label="Запись">
+        <button data-page="record" class="pad-10" data-i18n-aria-label="record">
             <svg>
                 <use href="sprite.svg#plus"></use>
             </svg>
         </button>
 
-        <button data-page="stats" class="pad-10"
-                data-i18n-aria-label="stats"
-                aria-label="Статистика">
+        <button data-page="stats" class="pad-10" data-i18n-aria-label="stats">
             <svg>
                 <use href="sprite.svg#stats"></use>
             </svg>
         </button>
 
-        <button data-page="settings" class="pad-10"
-                data-i18n-aria-label="settings"
-                aria-label="Настройки">
+        <button data-page="settings" class="pad-10" data-i18n-aria-label="settings">
             <svg>
                 <use href="sprite.svg#settings"></use>
             </svg>
@@ -176,9 +164,7 @@
 
 <section id="record-page" class="over hidden">
     <header class="row">
-        <button id="to-calendar" class="icon"
-                data-i18n-aria-label="back"
-                aria-label="Назад">
+        <button id="to-calendar" class="icon" data-i18n-aria-label="back">
             <svg>
                 <use href="sprite.svg#close"></use>
             </svg>
@@ -186,15 +172,13 @@
 
         <button id="pooped-date" class="tap"
                 aria-haspopup="dialog"
-                data-i18n-aria-label="selectDate"
-                aria-label="Выбрать дату"></button>
+                data-i18n-aria-label="selectDate"></button>
 
         <button id="pooped-time" class="tap"
                 aria-haspopup="dialog"
-                data-i18n-aria-label="selectTime"
-                aria-label="Выбрать время"></button>
+                data-i18n-aria-label="selectTime"></button>
 
-        <button class="green right" id="approve" data-i18n="create">Создать</button>
+        <button class="green right" id="approve" data-i18n="create"></button>
     </header>
 
     <div class="scroll">
@@ -203,16 +187,14 @@
                 <div id="bristol-label"></div>
                 <br>
                 <div id="bristol-icons" class="row" role="radiogroup"
-                     data-i18n-aria-label="bristolScale"
-                     aria-label="Форма по Бристольской шкале"></div>
+                     data-i18n-aria-label="bristolScale"></div>
             </section>
 
             <section>
                 <div id="color-label"></div>
                 <br>
                 <div id="color-icons" class="color-grid" role="radiogroup"
-                     data-i18n-aria-label="color"
-                     aria-label="Цвет"></div>
+                     data-i18n-aria-label="color"></div>
             </section>
 
             <section id="volume">
@@ -220,13 +202,12 @@
                 <br/>
                 <span id="volume-value" class="gray small"></span>
                 <input id="volume-range" type="range" min="0" max="99" step="1"
-                       data-i18n-aria-label="volumeRange"
-                       aria-label="Объем от 1 до 5">
+                       data-i18n-aria-label="volumeRange" aria-label="">
             </section>
 
             <section>
                 <div class="row add">
-                    <h3 data-i18n="tags">Теги</h3>
+                    <h3 data-i18n="tags"></h3>
                     <button id="edit-tags" class="right">
                         <svg>
                             <use href="sprite.svg#add"></use>
@@ -237,7 +218,7 @@
                 <div id="tag-buttons"></div>
             </section>
 
-            <button class="red" id="reject" data-i18n="cancel">Отменить</button>
+            <button class="red" id="reject" data-i18n="cancel"></button>
         </div>
     </div>
 
@@ -247,17 +228,15 @@
         <div class="row">
             <input id="tag" type="text" maxlength="24"
                    data-i18n-placeholder="customTagName"
-                   data-i18n-aria-label="customTagName"
-                   placeholder="Новый тег"
-                   aria-label="Название собственного тега">
-            <button id="create-tag" class="right" data-i18n="add">Добавить</button>
+                   data-i18n-aria-label="customTagName" aria-label="">
+            <button id="create-tag" class="right" data-i18n="add"></button>
         </div>
 
         <div id="tag-actions"></div>
 
         <footer>
-            <button id="close-tags" class="right" data-i18n="cancel">Отмена</button>
-            <button id="apply-tags" class="accent" data-i18n="ok">Ok</button>
+            <button id="close-tags" class="right" data-i18n="cancel"></button>
+            <button id="apply-tags" class="accent" data-i18n="ok"></button>
         </footer>
     </div>
 
@@ -288,9 +267,7 @@
         </div>
 
         <footer>
-            <button id="when-prev"
-                    data-i18n-aria-label="previousMonth"
-                    aria-label="Предыдущий месяц">
+            <button id="when-prev" data-i18n-aria-label="previousMonth">
                 <svg>
                     <use href="sprite.svg#prev"></use>
                 </svg>
@@ -298,16 +275,14 @@
 
             <span id="when-month"></span>
 
-            <button id="when-next"
-                    data-i18n-aria-label="nextMonth"
-                    aria-label="Следующий месяц">
+            <button id="when-next" data-i18n-aria-label="nextMonth">
                 <svg>
                     <use href="sprite.svg#next"></use>
                 </svg>
             </button>
 
-            <button id="close-when" class="right" data-i18n="cancel">Отмена</button>
-            <button id="apply-when" class="accent" data-i18n="ok">Ok</button>
+            <button id="close-when" class="right" data-i18n="cancel"></button>
+            <button id="apply-when" class="accent" data-i18n="ok"></button>
         </footer>
     </div>
 </section>
