@@ -27,7 +27,6 @@
         <button type="button" data-add="-1" aria-label="Предыдущий период">
             <svg>
                 <use href="sprite.svg#prev"></use>
-
             </svg>
         </button>
         <span id="range-label"></span>
@@ -76,12 +75,8 @@
 </section>
 
 <section id="settings-page" class="width-500 pad-20 hidden col">
-    <a
-            href="https://www.tbank.ru/cf/3sEawgoGUDe"
-            target="_blank"
-            class="row gap-10 pad-10"
-            data-i18n="support"
-    >
+    <a href="https://www.tbank.ru/cf/3sEawgoGUDe" target="_blank"
+       class="row gap-10 pad-10" data-i18n="support">
         <svg class="icon">
             <use href="sprite.svg#heart"></use>
         </svg>
@@ -94,11 +89,9 @@
         </svg>
         <span data-i18n="mailTo">Написать нам</span>
     </a>
-    <a
-            href="https://yugle7.github.io/poop-tracker/privacy.html"
-            target="_blank"
-            class="row gap-10 pad-10"
-    >
+
+    <a href="https://yugle7.github.io/poop-tracker/privacy.html" target="_blank"
+       class="row gap-10 pad-10">
         <svg class="icon">
             <use href="sprite.svg#shield"></use>
         </svg>
@@ -116,6 +109,7 @@
 <div class="hidden">
     <div id="calendars"></div>
 </div>
+
 <nav aria-label="Основная навигация">
     <div id="nav">
         <button data-page="calendar" class="to active" aria-label="Календарь" aria-selected="true">
@@ -148,12 +142,8 @@
                 <use href="sprite.svg#close"></use>
             </svg>
         </button>
-        <button id="pooped-date" class="tap" aria-haspopup="dialog"
-                aria-label="Выбрать дату">
-        </button>
-        <button id="pooped-time" class="tap" aria-haspopup="dialog"
-                aria-label="Выбрать время">
-        </button>
+        <button id="pooped-date" class="tap" aria-haspopup="dialog" aria-label="Выбрать дату"></button>
+        <button id="pooped-time" class="tap" aria-haspopup="dialog" aria-label="Выбрать время"></button>
         <button class="green right" id="approve">Создать</button>
     </header>
 
@@ -200,9 +190,7 @@
         <div class="row">
             <input id="tag" type="text" maxlength="24" placeholder="Новый тег"
                    aria-label="Название собственного тега">
-            <button id="create-tag" class="right" style="font-size: 16px">
-                Добавить
-            </button>
+            <button id="create-tag" class="right">Добавить</button>
         </div>
         <div id="tag-actions"></div>
         <footer>
@@ -256,9 +244,30 @@
 </section>
 
 <script src="script.js"></script>
+
+<script>
+    if (navigator.serviceWorker) {
+        navigator.serviceWorker
+            .register("/poop-tracker/sw.js", {
+                scope: "/poop-tracker/",
+                updateViaCache: "none"
+            })
+            .then((reg) => {
+                reg.update();
+
+                if (reg.waiting) {
+                    reg.waiting.postMessage("skipWaiting");
+                }
+
+                navigator.serviceWorker.addEventListener(
+                    "controllerchange",
+                    () => {
+                        window.location.reload();
+                    }
+                );
+            });
+    }
+</script>
+
 </body>
 </html>
-
-
-
-

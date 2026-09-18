@@ -1,3 +1,7 @@
+/* ==========================================================================
+   1. ПЕРЕМЕННЫЕ
+   ========================================================================== */
+
 :root {
     --bg: #f7f6f4;
     --text: #4d5156;
@@ -21,9 +25,7 @@
     --count: 0;
     --fails: 0;
     --total: 1;
-}
 
-:root {
     --inner-white: #ededca;
     --inner-gray: #9d9d98;
     --inner-yellow: #d8c34a;
@@ -58,10 +60,7 @@
         --help: #838282;
 
         --accent: var(--yellow);
-    }
 
-
-    :root {
         --inner-white: #bcbcb7;
         --inner-gray: #94938f;
         --inner-yellow: #c2ae51;
@@ -86,6 +85,9 @@
     }
 }
 
+/* ==========================================================================
+   2. СБРОС И БАЗА
+   ========================================================================== */
 
 * {
     margin: 0;
@@ -107,22 +109,100 @@ html, body {
     background: var(--bg);
     color: var(--text);
     min-height: 100%;
-    /*overscroll-behavior-y: none*/
-}
-
-html, body {
     overscroll-behavior: none;
     touch-action: pan-y;
 }
 
 body {
-    padding-bottom: calc(78px + env(safe-area-inset-bottom))
+    padding-bottom: calc(78px + env(safe-area-inset-bottom));
 }
 
-.hidden {
-    display: none !important
+/* ==========================================================================
+   3. УТИЛИТЫ
+   ========================================================================== */
+
+/* --- Скрытие --- */
+.hidden { display: none !important; }
+
+/* --- Типографика --- */
+.gray   { color: gray; }
+.small  { font-size: 14px; }
+.big    { font-size: 20px !important; }
+.mono   { font-variant-numeric: tabular-nums; }
+.accent { color: var(--accent); }
+.red    { color: var(--red); border-color: var(--red); }
+.green  { color: var(--green); stroke: var(--green); }
+
+/* --- Выравнивание --- */
+.center { align-content: center; text-align: center; justify-content: center; }
+.left   { text-align: left; }
+.right  { margin-left: auto; max-height: 50px; }
+
+/* --- Раскладка --- */
+.col {
+    display: flex;
+    flex-direction: column;
 }
 
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+/* --- Отступы / зазоры --- */
+.gap-8  { gap: 8px; }
+.gap-10 { gap: 10px; }
+.gap-30 { gap: 30px; }
+
+.pad-10 { padding: 10px; }
+.pad-20 { padding: 20px; }
+
+/* --- Контейнеры --- */
+.width-500 {
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+
+.over {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 10;
+}
+
+/* --- Инлайновые метки (счётчики на иконках) --- */
+small {
+    position: absolute;
+    font-size: 12px;
+    right: -3px;
+    top: -3px;
+    color: gray;
+}
+
+i {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    opacity: .7;
+    z-index: 0;
+}
+
+/* ==========================================================================
+   4. ОБЩИЕ КОМПОНЕНТЫ
+   ========================================================================== */
+
+/* --- Кнопки / ссылки --- */
 button, input {
     font: inherit;
     background-color: inherit;
@@ -133,7 +213,8 @@ button {
     line-height: 0;
     background: none;
     color: inherit;
-    cursor: pointer
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
 }
 
 a {
@@ -145,12 +226,37 @@ a, li {
     cursor: pointer;
 }
 
-.text {
-    padding: 10px;
-    border-radius: 14px;
-    background: var(--bg);
+/* --- Иконки --- */
+svg {
+    background: transparent;
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke: var(--icon);
+    cursor: pointer;
 }
 
+button svg {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+}
+
+.icon {
+    width: 30px;
+    min-width: 30px;
+    height: 30px;
+    stroke: gray;
+}
+
+.img {
+    width: 80px;
+    min-width: 80px;
+    height: 40px;
+}
+
+/* --- Кнопки-таблетки --- */
 .tap {
     padding: 6px 10px;
     min-height: 50px;
@@ -160,117 +266,141 @@ a, li {
     border: 2px solid var(--accent);
 }
 
-.col {
-    display: flex;
-    flex-direction: column;
+.tap.selected {
+    background: var(--accent);
+    color: var(--bg);
 }
 
+/* --- Шапка экранов --- */
 header {
     position: sticky;
     border-bottom: 1px solid var(--line);
-    border-top: none;
     border-radius: 0 0 30px 30px;
     padding: 12px 20px;
     background-color: var(--head);
     gap: 8px;
 }
 
-.eyebrow {
-    font-size: 12px;
-    color: var(--green);
-    margin-bottom: 3px
-}
-
-h1 {
-    font-weight: normal;
-    font-size: 24px;
-}
-
+/* --- Заголовки --- */
 h2 {
     width: 100%;
     font-size: 20px;
     padding: 10px 20px;
+    justify-content: space-between;
 }
 
+h2 button {
+    padding: 10px;
+}
 
 h3 {
     width: 100%;
-    /*font-size: 14px;*/
-    /*color: var(--yellow);*/
-    /*text-align: center;*/
-    /*padding-bottom: 10px;*/
 }
 
-
-.yellow {
-    stroke: var(--yellow);
-    color: var(--yellow);
+/* --- Скролл-контейнер --- */
+.scroll {
+    display: flex;
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
-.volume-dot.size-small {
-    width: 31px;
-    height: 31px
+.scroll::-webkit-scrollbar {
+    width: 0;
+    height: 0;
 }
 
-.volume-dot.size-medium {
-    width: 42px;
-    height: 42px
-}
-
-.volume-dot.size-large {
-    width: 53px;
-    height: 53px
-}
-
-.count-badge {
+/* --- Футер шторок --- */
+footer {
     position: absolute;
-    right: 4px;
-    top: 2px;
-    font-size: 10px;
-    color: #777;
-    z-index: 3
-}
-
-.day-detail {
-    margin-top: 22px
-}
-
-
-.small-primary, .secondary-btn, .primary-btn, .danger-btn, .small-btn {
-    min-height: 44px;
-    border-radius: 13px;
-    padding: 0 16px
-}
-
-.small-primary {
-    background: #222;
-    color: #fff;
-    font-weight: 700
-}
-
-.secondary-btn {
-    background: #f1f1f1
-}
-
-.primary-btn {
+    bottom: 0;
     width: 100%;
-    background: #222;
-    color: #fff;
-    font-weight: 700
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 50px;
 }
 
-
-.small-btn {
-    padding: 0 12px;
-    background: #f0f0f0
+footer button {
+    padding: 20px 20px 30px;
+    background: transparent;
+    font-size: 16px;
 }
 
-
-.chevron {
-    font-size: 22px;
-    color: #aaa;
-    text-align: right
+/* --- Инпуты (общие) --- */
+input {
+    padding: 10px;
 }
+
+input,
+select {
+    width: fit-content;
+    outline: none;
+    vertical-align: middle;
+}
+
+/* --- Слайдер --- */
+input[type=range] {
+    width: 100%;
+    height: 32px;
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    cursor: pointer;
+    accent-color: var(--accent);
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(
+            to right,
+            var(--accent) 0%,
+            var(--accent) var(--value, 50%),
+            var(--line) var(--value, 50%),
+            var(--line) 100%
+    );
+}
+
+input[type=range]::-webkit-slider-thumb {
+    width: 20px;
+    height: 20px;
+    margin-top: -8px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--accent);
+    appearance: none;
+    -webkit-appearance: none;
+    transition: transform 120ms ease;
+}
+
+input[type=range]:active::-webkit-slider-thumb {
+    transform: scale(1.15);
+}
+
+input[type=range]::-moz-range-track {
+    height: 3px;
+    border-radius: 2px;
+    background: var(--bg);
+}
+
+input[type=range]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--accent);
+    transition: transform 120ms ease;
+}
+
+input[type=range]:active::-moz-range-thumb {
+    transform: scale(1.15);
+}
+
+/* ==========================================================================
+   5. НИЖНЯЯ НАВИГАЦИЯ
+   ========================================================================== */
 
 nav {
     position: fixed;
@@ -286,26 +416,9 @@ nav {
 
 #nav {
     display: grid;
-    grid-template-columns:repeat(4, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     max-width: 600px;
     margin: 0 auto;
-}
-
-svg {
-    background: transparent;
-    stroke-width: 2;
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke: var(--icon);
-    cursor: pointer;
-}
-
-
-button svg {
-    width: 32px;
-    min-width: 32px;
-    height: 32px;
 }
 
 .to {
@@ -316,109 +429,145 @@ button svg {
     stroke: var(--accent);
 }
 
+/* ==========================================================================
+   6. КАЛЕНДАРЬ
+   ========================================================================== */
 
-.header-spacer {
-    width: 44px
-}
-
-.date-control {
-    padding: 0;
-    margin-top: 5px;
-    color: #666;
-    font-size: 13px;
-    text-align: left
-}
-
-.scroll {
-    display: flex;
-    flex: 1;
-    overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.scroll::-webkit-scrollbar {
-    width: 0; /* убираем саму полосу */
-    height: 0;
-}
-
-
-input[type=range] {
+#calendar {
     width: 100%;
-    height: 32px;
-    appearance: none;
-    -webkit-appearance: none;
+    touch-action: pan-y;
+    overflow: hidden;
+}
+
+#calendar h2 {
+    text-align: center;
+}
+
+.calendar {
+    height: 360px;
+}
+
+#calendars {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    width: calc(300% + 60px);
+    transition: none;
+    touch-action: pan-y;
+    overflow: hidden;
+}
+
+#calendars > div {
+    flex: 0 0 var(--width);
+    width: var(--width);
+}
+
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    justify-items: center;
+    padding: 0 20px;
+}
+
+.days span {
+    z-index: 1;
+    position: relative;
+    font-size: 14px;
+}
+
+.days > span {
+    color: gray;
+    padding-bottom: 10px;
+}
+
+.days > button {
+    height: 45px;
+    aspect-ratio: 1;
+    padding: 5px;
     background: transparent;
-    cursor: pointer;
-    accent-color: var(--accent);
-}
-
-input[type=range]::-webkit-slider-runnable-track {
-    height: 3px;
-    border-radius: 2px;
-    background: var(--line);
-}
-
-input[type=range]::-webkit-slider-thumb {
-    width: 20px;
-    height: 20px;
-    margin-top: -8px;
-    border: 0;
     border-radius: 50%;
-    background: var(--accent);
-    appearance: none;
-    -webkit-appearance: none;
+    position: relative;
+    line-height: 1;
 }
 
-input[type=range]::-moz-range-track {
-    height: 3px;
-    border-radius: 2px;
-    background: var(--bg);
+.days > button > span {
+    font-size: 14px;
+    z-index: 1;
+    position: relative;
 }
 
-input[type=range]::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    border: 0;
-    border-radius: 50%;
-    background: var(--accent);
+.today  { color: var(--accent); }
+.future { color: gray; }
+
+.days .selected {
+    background: var(--accent) !important;
+    color: var(--bg);
 }
 
-input[type=range]::-webkit-slider-thumb {
-    transition: transform 120ms ease;
+.empty {
+    pointer-events: none;
+    text-align: center;
+    color: var(--help);
+    font-size: 13px;
+    padding: 24px 0;
 }
 
-input[type=range]:active::-webkit-slider-thumb {
-    transform: scale(1.15);
+/* ==========================================================================
+   7. СПИСОК ЗАПИСЕЙ ДНЯ
+   ========================================================================== */
+
+#chosen-records > button {
+    width: 100%;
+    padding: 10px 0;
 }
 
-input[type=range]::-moz-range-thumb {
-    transition: transform 120ms ease;
+#chosen-records .row {
+    flex-wrap: wrap;
+    column-gap: 10px;
+    row-gap: 0;
+    padding: 5px;
 }
 
-input[type=range]:active::-moz-range-thumb {
-    transform: scale(1.15);
+.record {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    width: 100%;
+    gap: 20px;
+    padding: 0 20px;
 }
 
-input[type=range]::-webkit-slider-runnable-track {
-    height: 3px;
-    border-radius: 2px;
-    background: linear-gradient(
-            to right,
-            var(--accent) 0%,
-            var(--accent) var(--value, 50%),
-            var(--line) var(--value, 50%),
-            var(--line) 100%
-    );
+.tags {
+    display: flex;
+    column-gap: 10px;
+    flex-wrap: wrap;
+    padding: 7px 20px;
 }
 
+/* ==========================================================================
+   8. ФОРМА ЗАПИСИ
+   ========================================================================== */
 
+/* --- Бристоль --- */
+#bristol-icons {
+    display: grid;
+    row-gap: 20px;
+    grid-template-columns: repeat(4, 1fr);
+    justify-content: space-between;
+}
+
+#bristol-label::first-letter {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+}
+
+/* --- Цвет --- */
 .color-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
     gap: 14px;
 }
-
 
 .color {
     width: 40px;
@@ -434,702 +583,11 @@ div.color {
     background: var(--inner);
 }
 
-/*.swatch {*/
-/*    width: 33px;*/
-/*    height: 33px;*/
-/*    border-radius: 50%;*/
-/*    background: var(--swatch);*/
-/*    border: 1px solid #d7d7d7*/
-/*}*/
-
-.center {
-    align-content: center;
-    text-align: center;
-    justify-content: center;
-}
-
-h2 {
-    justify-content: space-between;
-}
-
-h2 button {
-    padding: 10px;
-}
-
 .color.selected {
     outline: 2px solid var(--outer);
 }
 
-
-#tag-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px
-}
-
-.tap.selected {
-    background: var(--accent);
-    color: var(--bg);
-}
-
-.form-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding-bottom: 8px
-}
-
-.stats-period {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    margin-bottom: 14px
-}
-
-.stats-period strong {
-    text-transform: capitalize
-}
-
-.stats-period span {
-    font-size: 12px;
-    color: #888
-}
-
-.segmented {
-    display: grid;
-    grid-template-columns:repeat(3, 1fr);
-    background: #eee;
-    border-radius: 13px;
-    padding: 3px;
-    margin-bottom: 16px
-}
-
-.segment {
-    min-height: 42px;
-    border-radius: 10px;
-    color: #777;
-    font-size: 13px
-}
-
-.segment.active {
-    background: #fff;
-    color: #222;
-    font-weight: 700;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, .08)
-}
-
-.chart-card {
-    margin-bottom: 14px
-}
-
-.row {
-    display: grid;
-    grid-template-columns:repeat(7, 1fr);
-    gap: 6px;
-    align-items: end;
-}
-
-.bar-item {
-    height: 100%;
-    display: grid;
-    grid-template-rows:1fr auto auto;
-    align-items: end;
-    gap: 4px;
-    padding: 0 2px
-}
-
-.bar-track {
-    height: 165px;
-    background: #f1f1f1;
-    border-radius: 10px 10px 6px 6px;
-    display: flex;
-    align-items: flex-end;
-    overflow: hidden
-}
-
-.bar-fill {
-    width: 100%;
-    background: #777;
-    border-radius: 10px 10px 6px 6px;
-    min-height: 0
-}
-
-.bar-value {
-    font-size: 10px;
-    color: #666
-}
-
-.bar-label {
-    font-size: 9px;
-    color: #999;
-    white-space: nowrap
-}
-
-.hbar-row {
-    display: grid;
-    grid-template-columns:130px 1fr 42px;
-    align-items: center;
-    gap: 8px;
-    min-height: 30px;
-    font-size: 12px
-}
-
-.hbar {
-    height: 10px;
-    background: #f0f0f0;
-    border-radius: 999px;
-    overflow: hidden
-}
-
-.hbar span {
-    display: block;
-    height: 100%;
-    border-radius: 999px;
-    background: #777
-}
-
-.hbar-row strong {
-    text-align: right;
-    font-size: 11px
-}
-
-.muted {
-    font-size: 12px;
-    color: #888
-}
-
-.top-gap {
-    margin-top: 12px
-}
-
-
-.day-cell:disabled {
-    opacity: .35;
-    cursor: default
-}
-
-.date-control-label {
-    display: block;
-    font-size: 11px;
-    color: #999;
-    margin-top: 5px;
-    margin-bottom: 3px
-}
-
-.date-input {
-    display: block;
-    width: 100%;
-    border: 0;
-    background: transparent;
-    padding: 0;
-    color: #555;
-    font-size: 13px;
-    outline: none
-}
-
-.date-input:focus {
-    color: #222
-}
-
-.custom-tag-editor {
-    display: flex;
-    gap: 8px;
-    margin: 10px 0 12px;
-}
-
-#calendar h2 {
-    text-align: center;
-}
-
-
-.small-primary {
-    padding: 0 13px;
-    white-space: nowrap;
-}
-
-.bristol-btn .mini-shape svg {
-    pointer-events: none
-}
-
-.bristol-btn.selected .mini-shape {
-    transform: scale(1.05)
-}
-
-
-.poop-svg {
-    display: block
-}
-
-
-.bar-item {
-    border-radius: 12px
-}
-
-.red {
-    color: var(--red);
-    border-color: var(--red);
-}
-
-.green {
-    color: var(--green);
-    stroke: var(--green);
-}
-
-.bar-item:active .bar-track {
-    background: #e6e6e6
-}
-
-.when-icon {
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
-    background: #f1f1f1;
-    display: grid;
-    place-items: center;
-    color: #666;
-    font-size: 15px
-}
-
-.when-copy {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 2px
-}
-
-.when-label {
-    font-size: 10px;
-    line-height: 1;
-    color: #999;
-    letter-spacing: .04em
-}
-
-.when-part strong {
-    font-size: 16px;
-    line-height: 1.15;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-weight: 700
-}
-
-.when-chevron {
-    font-size: 16px;
-    color: #aaa;
-    text-align: right
-}
-
-
-.picker-layer {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    display: grid;
-    align-items: end
-}
-
-.picker-layer.hidden {
-    display: none
-}
-
-.picker-backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, .28);
-    backdrop-filter: blur(3px)
-}
-
-.picker-sheet {
-    position: relative;
-    width: 100%;
-    background: #fff;
-    border-radius: 24px 24px 0 0;
-    padding: 10px 16px calc(18px + env(safe-area-inset-bottom));
-    box-shadow: 0 -8px 35px rgba(0, 0, 0, .12);
-    animation: picker-in .18s ease-out;
-    max-height: min(78vh, 680px);
-    overflow: auto
-}
-
-.picker-handle {
-    width: 36px;
-    height: 4px;
-    border-radius: 99px;
-    background: #d7d7d7;
-    margin: 0 auto 14px
-}
-
-.picker-sheet-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 14px
-}
-
-.picker-sheet-head > div {
-    display: flex;
-    flex-direction: column;
-    gap: 3px
-}
-
-.picker-eyebrow {
-    font-size: 11px;
-    color: #999
-}
-
-.picker-sheet-head strong {
-    font-size: 22px;
-    letter-spacing: -.02em
-}
-
-.picker-close {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: #f1f1f1;
-    font-size: 25px;
-    color: #555
-}
-
-.picker-quick {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px
-}
-
-.picker-quick button {
-    min-height: 38px;
-    padding: 0 14px;
-    border-radius: 999px;
-    background: #f0f0f0;
-    font-size: 12px;
-    color: #444
-}
-
-.picker-month-head {
-    display: grid;
-    grid-template-columns:42px 1fr 42px;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px
-}
-
-.picker-month-head strong {
-    text-align: center;
-    text-transform: capitalize;
-    font-size: 15px
-}
-
-.picker-nav {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    background: #f2f2f2;
-    font-size: 24px;
-    color: #333
-}
-
-.picker-nav:disabled {
-    opacity: .3
-}
-
-.picker-weekdays, .picker-grid {
-    display: grid;
-    grid-template-columns:repeat(7, 1fr);
-    gap: 5px
-}
-
-.picker-weekdays {
-    margin-bottom: 6px
-}
-
-.picker-weekdays span {
-    text-align: center;
-    font-size: 10px;
-    color: #aaa;
-    padding: 4px 0
-}
-
-.picker-day {
-    aspect-ratio: 1;
-    border-radius: 13px;
-    display: grid;
-    place-items: center;
-    font-size: 14px;
-    color: #333;
-    background: transparent
-}
-
-.picker-day:not(:disabled):active {
-    background: #eee
-    /*color: #3fa07b;*/
-}
-
-.picker-day.selected {
-    background: #222;
-    color: #fff;
-    font-weight: 700
-}
-
-.picker-day.today:not(.selected) {
-    box-shadow: inset 0 0 0 1.5px #aaa;
-    font-weight: 700
-}
-
-.picker-day:disabled {
-    color: #ddd
-}
-
-.picker-day.empty {
-    pointer-events: none
-}
-
-.time-sheet {
-    max-height: 65vh
-}
-
-.time-grid {
-    display: grid;
-    grid-template-columns:repeat(4, 1fr);
-    gap: 7px
-}
-
-.time-option {
-    min-height: 44px;
-    border-radius: 12px;
-    background: #f3f3f3;
-    color: #333;
-    font-variant-numeric: tabular-nums
-}
-
-.time-option.selected {
-    background: #222;
-    color: #fff;
-    font-weight: 700
-}
-
-.time-option:active {
-    transform: scale(.98)
-}
-
-@keyframes picker-in {
-    from {
-        transform: translateY(18px);
-        opacity: .6
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1
-    }
-}
-
-@media (max-width: 380px) {
-    .when-part {
-        grid-template-columns:30px minmax(0, 1fr) 10px;
-        padding: 7px 7px;
-        gap: 7px
-    }
-
-    .when-icon {
-        width: 30px;
-        height: 30px
-    }
-
-    .when-part strong {
-        font-size: 15px
-    }
-
-    .picker-sheet {
-        padding-left: 12px;
-        padding-right: 12px
-    }
-
-    .time-grid {
-        grid-template-columns:repeat(4, 1fr);
-        gap: 6px
-    }
-
-    .time-option {
-        min-height: 42px
-    }
-}
-
-#bristol-icons {
-    display: grid;
-    row-gap: 20px;
-    grid-template-columns: repeat(4, 1fr);
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
-.img {
-    width: 80px;
-    min-width: 80px;
-    height: 40px;
-}
-
-.icon {
-    width: 30px;
-    min-width: 30px;
-    height: 30px;
-    stroke: gray;
-}
-
-.row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
-}
-
-.record {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    width: 100%;
-    gap: 20px;
-    padding: 0 20px;
-}
-
-#chosen-records .row {
-    flex-wrap: wrap;
-    column-gap: 10px;
-    row-gap: 0;
-    padding: 5px;
-}
-
-input {
-    padding: 10px;
-}
-
-input,
-select {
-    width: fit-content;
-    outline: none;
-    vertical-align: middle;
-}
-
-
-.test {
-    fill-opacity: 1;
-}
-
-/*button.icon {*/
-/*    display: grid;*/
-/*    place-items: center;*/
-/*}*/
-
-#reject {
-    padding: 10px 10px 30px;
-    width: 100%;
-}
-
-#approve {
-    margin-left: auto;
-    border: 2px solid var(--green);
-    min-height: 50px;
-    padding: 10px 20px;
-    border-radius: 20px;
-}
-
-.right {
-    margin-left: auto;
-    max-height: 50px;
-}
-
-.left {
-    text-align: left;
-}
-
-.add {
-    height: 32px;
-}
-
-.gray {
-    color: gray;
-}
-
-.small {
-    font-size: 14px;
-}
-
-.big {
-    font-size: 20px !important;
-}
-
-
-.over {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    z-index: 10;
-}
-
-.width-500 {
-    max-width: 500px;
-    width: 100%;
-    margin: 0 auto;
-    position: relative;
-}
-
-.pad-20 {
-    padding: 20px;
-}
-
-.mono {
-    /*font-family: monospace;*/
-    font-variant-numeric: tabular-nums;
-}
-
-
-.gap-30 {
-    gap: 30px;
-}
-
-#chosen-records > button {
-    width: 100%;
-    padding: 10px 0;
-}
-
-.help {
-    width: 100%;
-    font-size: 14px;
-    color: gray;
-    text-align: right;
-}
-
-.pad-10 {
-    padding: 10px;
-}
-
-.gap-8 {
-    gap: 8px;
-}
-
-.gap-10 {
-    gap: 10px;
-}
-
-.gap-15 {
-    gap: 15px;
-}
-
-
-/*выбор времени*/
-.button {
-    cursor: pointer;
-    background: var(--bg);
-    border-radius: 15px;
-    padding: 10px 15px;
-    color: color-mix(in srgb, var(--accent), black)
-}
-
+/* --- Объём --- */
 #volume {
     position: relative;
 }
@@ -1140,46 +598,34 @@ select {
     top: 30px;
 }
 
-#value {
-    padding: 20px
-}
-
-#date, #time {
-    cursor: pointer
-}
-
-#date {
-    font-size: 18px
-}
-
-#time {
-    font-size: 24px
-}
-
-#overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 10;
-    background: #0004;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 180ms
-}
-
-#overlay.open {
-    opacity: 1;
-    visibility: visible
-}
-
-
-#tag-actions {
+/* --- Теги --- */
+#tag-buttons {
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
-    gap: 10px;
-    padding: 10px 10px 40px;
-    position: relative;
+    gap: 8px;
 }
+
+.add {
+    height: 32px;
+}
+
+/* --- Кнопки действия --- */
+#approve {
+    margin-left: auto;
+    border: 2px solid var(--green);
+    min-height: 50px;
+    padding: 10px 20px;
+    border-radius: 20px;
+}
+
+#reject {
+    padding: 10px 10px 30px;
+    width: 100%;
+}
+
+/* ==========================================================================
+   9. НИЖНИЕ ШТОРКИ (редактор тегов, пикер даты/времени)
+   ========================================================================== */
 
 #tags-editor,
 #when-picker {
@@ -1198,39 +644,64 @@ select {
     transition: transform 220ms;
 }
 
+#tags-editor.open,
+#when-picker.open {
+    transform: translateY(0);
+}
+
+/* --- Редактор тегов --- */
+#tag-actions {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 10px 40px;
+    position: relative;
+}
+
+#create-tag {
+    padding: 10px;
+    font-size: 16px;
+}
+
+#tag:placeholder-shown ~ #create-tag {
+    opacity: .5;
+}
+
+/* --- Пикер даты/времени --- */
 #when-picker {
     height: 385px;
     font-variant-numeric: tabular-nums;
 }
 
-
-#bristol-label::first-letter {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-variant-numeric: tabular-nums;
+#when-prev, #when-next {
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
-#tags-editor.open,
-#when-picker.open {
-    transform: translateY(0)
+#when-month {
+    font-size: 18px;
 }
 
-#create-tag {
-    padding: 10px;
+#when-picker .days > button {
+    height: 40px;
+    font-size: 14px;
 }
 
+/* --- Часы --- */
 #watch {
     padding-bottom: 10px;
     display: flex;
     align-items: center;
-    gap: 8px
+    gap: 8px;
 }
 
 #watch button {
-    font-size: 24px
+    font-size: 24px;
 }
 
 #watch .selected {
-    background: var(--accent)
+    background: var(--accent);
 }
 
 #clock {
@@ -1239,13 +710,13 @@ select {
     background: var(--fade);
     border-radius: 50%;
     position: relative;
-    touch-action: none
+    touch-action: none;
 }
 
 .tick {
     position: absolute;
     font: 14px sans-serif;
-    transform: translate(-50%, -50%)
+    transform: translate(-50%, -50%);
 }
 
 #white {
@@ -1268,7 +739,7 @@ select {
     background: var(--accent);
     border-radius: 50%;
     cursor: grab;
-    touch-action: none
+    touch-action: none;
 }
 
 #center {
@@ -1279,7 +750,7 @@ select {
     top: 50%;
     transform: translate(-50%, -50%);
     background: var(--accent);
-    border-radius: 50%
+    border-radius: 50%;
 }
 
 #line {
@@ -1289,160 +760,33 @@ select {
     width: 2px;
     height: 2px;
     background: var(--accent);
-    transform-origin: 0 50%
+    transform-origin: 0 50%;
 }
 
-#when-month {
-    font-size: 18px
+/* ==========================================================================
+   10. ОВЕРЛЕЙ
+   ========================================================================== */
+
+#overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    background: #0004;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 180ms;
 }
 
-.tags {
-    display: flex;
-    column-gap: 10px;
-    flex-wrap: wrap;
-    padding: 7px 20px;
+#overlay.open {
+    opacity: 1;
+    visibility: visible;
 }
 
-.days {
-    display: grid;
-    grid-template-columns:repeat(7, 1fr);
-    text-align: center;
-    justify-items: center;
-    padding: 0 20px;
-}
+/* ==========================================================================
+   11. СТАТИСТИКА
+   ========================================================================== */
 
-.days span {
-    z-index: 1;
-    position: relative;
-    font-size: 14px;
-}
-
-.days > span {
-    color: gray;
-}
-
-.days > button > span {
-    font-size: 14px;
-    z-index: 1;
-    position: relative;
-}
-
-.days > button {
-    height: 45px;
-    aspect-ratio: 1;
-    padding: 5px;
-    background: transparent;
-    border-radius: 50%;
-    position: relative;
-    line-height: 1;
-}
-
-#when-picker .days > button {
-    height: 40px;
-    font-size: 14px;
-}
-
-small {
-    position: absolute;
-    font-size: 12px;
-    right: -3px;
-    top: -3px;
-    color: gray;
-}
-
-i {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    opacity: .7;
-    z-index: 0;
-}
-
-.today {
-    color: var(--accent);
-}
-
-.future {
-    color: gray;
-}
-
-.days .selected {
-    background: var(--accent) !important;
-    color: var(--bg);
-}
-
-.empty {
-    pointer-events: none;
-}
-
-.days > span {
-    padding-bottom: 10px;
-}
-
-.tip {
-    font-size: 12px;
-}
-
-#calendar {
-    width: 100%;
-    touch-action: pan-y;
-    overflow: hidden;
-}
-
-.calendar {
-    height: 360px;
-}
-
-#calendars {
-    display: flex;
-    justify-content: space-between;
-    gap: 30px;
-    width: calc(300% + 60px);
-    transition: none;
-    touch-action: pan-y;
-    overflow: hidden;
-}
-
-#calendars > div {
-    flex: 0 0 var(--width);
-    width: var(--width);
-}
-
-footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-height: 50px;
-}
-
-footer button {
-    padding: 20px 20px 30px;
-    background: transparent;
-    font-size: 16px
-}
-
-#when-prev, #when-next {
-    padding-top: 5px;
-    padding-bottom: 5px;
-}
-
-#tag:placeholder-shown ~ #create-tag {
-    opacity: .5;
-}
-
-.accent {
-    color: var(--accent)
-}
-
-button {
-    -webkit-tap-highlight-color: transparent;
-}
-
+/* --- Переключатель периода --- */
 #period {
     position: relative;
     display: flex;
@@ -1487,6 +831,7 @@ button {
     transition: color 0.2s ease;
 }
 
+/* --- Стрелки диапазона --- */
 #range {
     display: flex;
     align-items: center;
@@ -1519,13 +864,74 @@ button {
 }
 
 #range-label {
-    color: var(--text);
-    font-variant-numeric: tabular-nums;
     display: flex;
     gap: 10px;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
 }
 
+/* --- Карточки --- */
+.card {
+    padding: 0 30px 70px 0;
+}
 
+/* --- Горизонтальные списки (теги, цвет, форма) --- */
+.h-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.h-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.h-label {
+    font-size: 13px;
+    overflow: hidden;
+    white-space: normal;
+    color: var(--help);
+}
+
+.h-value {
+    position: relative;
+    height: 16px;
+}
+
+.h-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 16px;
+    min-width: 2px;
+    border-radius: 2px 4px 4px 2px;
+    overflow: hidden;
+    background: var(--color);
+    width: calc(var(--count) / var(--total) * 100%);
+}
+
+.split {
+    background: linear-gradient(
+            to right,
+            var(--yellow) calc((var(--count) - var(--fails)) / var(--count) * 100%),
+            var(--blue) calc((var(--count) - var(--fails)) / var(--count) * 100%)
+    );
+}
+
+.h-number {
+    position: absolute;
+    top: 0;
+    left: calc((var(--count) + var(--fails)) / var(--total) * 100%);
+    margin-left: 10px;
+    font-size: 13px;
+    line-height: 16px;
+    white-space: nowrap;
+    color: var(--text);
+}
+
+/* --- Вертикальные графики --- */
 .v-chart {
     position: relative;
     width: 100%;
@@ -1600,71 +1006,9 @@ button {
     color: var(--help) !important;
 }
 
-.h-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.h-col {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.h-label {
-    font-size: 13px;
-    overflow: hidden;
-    white-space: normal;
-    color: var(--help);
-}
-
-.h-value {
-    position: relative;
-    height: 16px;
-}
-
-.h-bar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 16px;
-    min-width: 2px;
-    border-radius: 2px 4px 4px 2px;
-    overflow: hidden;
-    background: var(--color);
-    width: calc(var(--count) / var(--total) * 100%);
-}
-
-.split {
-    background: linear-gradient(
-            to right,
-            var(--yellow) calc((var(--count) - var(--fails)) / var(--count) * 100%),
-            var(--blue) calc((var(--count) - var(--fails)) / var(--count) * 100%)
-    );
-}
-
-.h-number {
-    position: absolute;
-    top: 0;
-    left: calc((var(--count) + var(--fails)) / var(--total) * 100%);
-    margin-left: 10px;
-    font-size: 13px;
-    line-height: 16px;
-    white-space: nowrap;
-    color: var(--text);
-}
-
-.card {
-    padding: 0 30px 70px 0;
-}
-
-.empty {
-    text-align: center;
-    color: var(--help);
-    font-size: 13px;
-    padding: 24px 0;
-}
+/* ==========================================================================
+   12. СТРАНИЦА НАСТРОЕК
+   ========================================================================== */
 
 #settings-page a,
 #settings-page button {
