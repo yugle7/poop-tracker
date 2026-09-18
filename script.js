@@ -1,3 +1,29 @@
+// Язык
+
+let S = {};
+
+const colorIcons = document.getElementById('color-icons');
+const whenCalendar = document.getElementById('when-calendar');
+
+const getColorStyle = (color) => `--inner: var(--inner-${color});--outer: var(--outer-${color})`
+
+const setLanguage = () => {
+    const language = navigator.language?.toLowerCase().startsWith('ru') ? 'ru' : 'en';
+    document.documentElement.lang = language;
+    S = translations[language];
+
+    document.querySelectorAll('[data-i18n]').forEach(q => q.textContent = S[q.dataset.i18n]);
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(q => q.placeholder = S[q.dataset.i18nPlaceholder]);
+    document.querySelectorAll('[data-i18n-title]').forEach(q => q.title = S[q.dataset.i18nTitle]);
+    document.querySelectorAll('[data-i18n-aria-label]').forEach(q => q.setAttribute('aria-label', S[q.dataset.i18nAriaLabel]));
+
+    whenCalendar.firstElementChild.innerHTML = S.wds.map(q => `<span>${q}</span>`).join('');
+
+    colorIcons.innerHTML = Object.keys(S.colors).map(color =>
+        `<button class="color" style="${getColorStyle(color)}" role="radio" aria-label="${color}"></button>`
+    ).join('');
+}
+
 // Вычисление объема кала
 
 
@@ -87,20 +113,6 @@ const getDefaultRecord = () => ({
 
 // Константы
 
-
-const defaultTags = [
-    'Боль',
-    'Газы',
-    'Вздутие',
-    'Напряжение',
-    'Кофе',
-    'Лекарства',
-    'Прогулка',
-    'Бег',
-    'Стресс',
-    'После еды'
-];
-
 const SCALES = {
     white: 6,
     gray: 4,
@@ -114,54 +126,11 @@ const SCALES = {
     red: 7
 }
 
-const COLORS = {
-    white: 'Белая',
-    gray: 'Серая',
-    yellow: 'Желтая',
-    orange: 'Оранжевая',
-    'light-brown': 'Светло-коричневая',
-    brown: 'Коричневая',
-    'dark-brown': 'Темно-коричневая',
-    black: 'Черная',
-    green: 'Зеленая',
-    red: 'Красная'
-}
-
-
-const VOLUMES = ['Очень мало', 'Мало', 'Средне', 'Много', 'Очень много'];
-
-const BRISTOLS = [
-    'Ничего не вышло',
-    '1 — отдельные твердые комочки',
-    '2 — колбаска с комочками',
-    '3 — колбаска с трещинами',
-    '4 — гладкая, мягкая, оформленная',
-    '5 — мягкие комочки с четкими краями',
-    '6 — мягкие рыхлые кусочки',
-    '7 — водянистая, без твердых частей'
-];
-
-const BR = [
-    'Ничего',
-    'Твердая',
-    'Комковатая',
-    'Потрескавшаяся',
-    'Гладкая',
-    'Мягкая',
-    'Рыхлая',
-    'Водянистая',
-];
-
-const MON = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
-const MONTH = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
-const WD = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
-const MN = ['Я', 'Ф', 'М', 'А', 'М', 'И', 'И', 'А', 'С', 'О', 'Н', 'Д'];
-
 // Инструменты
 
 const getTimeText = (date) => `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
 
-const getDateText = (date) => date.getDate() + ' ' + MON[date.getMonth()];
+const getDateText = (date) => date.getDate() + ' ' + S.mons[date.getMonth()];
 
 // Состояние
 
@@ -174,14 +143,13 @@ let tags = [];
 
 // Элементы
 
-const htmlElement = document.documentElement;
+// const htmlElement = document.documentElement;
 
-const navigation = document.getElementById('navigation');
+// const navigation = document.getElementById('navigation');
 
 // Навигация
 
 const toCalendar = document.getElementById("to-calendar");
-
 
 const pages = {
     calendar: document.getElementById("calendar-page"),
@@ -210,7 +178,7 @@ nav.onclick = e => {
     link = button;
     if (page === pages.record) {
         record = getDefaultRecord();
-        setForm();
+        setShape();
     } else if (page === pages.stats) {
         renderRange();
         renderStats();
@@ -236,7 +204,7 @@ toCalendar.onclick = e => {
 // 1. Календарь
 
 const calendar = document.getElementById('calendar');
-const days = document.getElementById('days');
+// const days = document.getElementById('days');
 
 let calendarDate = new Date(day);
 let chosenButton;
@@ -346,14 +314,14 @@ const getCalendarPage = (delta = 0) => {
         return `<button><span class="${getClass(d)}">${n}</span>${r ? getRecordHtml(r) : ''}</button>`
     }
 
-    let days = WD.map(d => `<span>${d}</span>`).join('') + '<button class="empty"></button>'.repeat(first);
+    let days = S.wds.map(d => `<span>${d}</span>`).join('') + '<button class="empty"></button>'.repeat(first);
     for (let i = 1; i <= last; i++) days += dayHtml(i);
 
     calendarPages[k] = document.createElement('DIV');
     calendarPages[k].className = 'calendar';
     calendarPages[k].innerHTML = `<h2 class="row">
         <button id="prev"><svg><use href="sprite.svg#prev"></use></svg></button>
-        <span class="big">${MONTH[m]} ${y}</span>
+        <span class="big">${S.months[m]} ${y}</span>
         <button id="next"><svg><use href="sprite.svg#next"></use></svg></button>
     </h2>
     <div class="days">${days}</div>`;
@@ -375,8 +343,8 @@ const recordHtml = ({created, pooped, bristol, color, volume, tags}) => {
         <div class="tags">${tags.map(q => `<span class="small gray">${q}</span>`).join('')}</div>
         <div class="record">
             <div class="color" style="${bristol ? getColorStyle(color) : '--inner: var(--blue)'}"></div>
-            <div>${BR[bristol]}</div>
-            <span class="small gray right">${VOLUMES[Math.floor(volume / 20)]}</span>
+            <div>${S.brs[bristol]}</div>
+            <span class="small gray right">${S.volumes[Math.floor(volume / 20)]}</span>
             <span class="mono gray small">${getTimeText(pooped)}</span>
         </div>
     </button>`;
@@ -387,7 +355,7 @@ const chosenDay = document.getElementById('chosen-day');
 
 const renderChosenRecords = () => {
     const d = getDate(day);
-    chosenDay.innerText = day.getDate() + ' ' + MON[day.getMonth()];
+    chosenDay.innerText = day.getDate() + ' ' + S.mons[day.getMonth()];
     const src = records.filter(({pooped}) => getDate(pooped) === d).sort((a, b) => a.pooped - b.pooped);
     chosenRecords.innerHTML = src.length ? src.map(recordHtml).join('') : `<div class="small gray center">нет записей</div>`;
 }
@@ -397,7 +365,7 @@ chosenRecords.onclick = e => {
     if (!button) return
     const created = +button.dataset.created;
     record = records.find(r => r.created === created);
-    setForm();
+    setShape();
     toggle();
     page = pages.record;
     link = recordLink;
@@ -462,7 +430,7 @@ calendar.addEventListener('pointermove', e => {
     calendars.style.transform = `translateX(${shift - width}px)`;
 });
 
-const stopDragging = e => {
+const stopDragging = () => {
     if (startX === null) return;
     startX = null;
 
@@ -497,7 +465,6 @@ const bristolLabel = document.getElementById('bristol-label');
 const volumeLabel = document.getElementById('volume-label');
 const volumeRange = document.getElementById('volume-range');
 const volumeValue = document.getElementById('volume-value');
-const colorIcons = document.getElementById('color-icons');
 
 const tagButtons = document.getElementById('tag-buttons');
 const tagActions = document.getElementById('tag-actions');
@@ -542,18 +509,6 @@ approveAction.onclick = (e) => {
     toCalendarPage();
 }
 
-// 3. Статистика
-// 4. Настройки
-
-// Иконки
-
-// 2. Форма добавления
-
-// Обработчики
-
-
-// Отображение
-
 // 1. Бристоль
 
 let bristolIcon;
@@ -571,7 +526,7 @@ const setBristol = (icon) => {
     bristolIcon = icon;
 
     record.bristol = +bristolIcon.ariaLabel;
-    bristolLabel.innerText = BRISTOLS[record.bristol];
+    bristolLabel.innerText = S.bristols[record.bristol];
 
     bristolIcon.classList.add('selected');
 
@@ -592,12 +547,6 @@ bristolIcons.addEventListener('click', ({target}) => {
 
 let colorIcon;
 
-const getColorStyle = (color) => `--inner: var(--inner-${color});--outer: var(--outer-${color})`
-
-colorIcons.innerHTML = Object.keys(COLORS).map(color =>
-    `<button class="color" style="${getColorStyle(color)}" role="radio" aria-label="${color}"></button>`
-).join('');
-
 const setColor = (icon) => {
     if (icon === colorIcon) return;
     if (colorIcon) {
@@ -607,7 +556,7 @@ const setColor = (icon) => {
     colorIcon.classList.add('selected');
 
     record.color = colorIcon.ariaLabel;
-    colorLabel.innerText = COLORS[record.color];
+    colorLabel.innerText = S.colors[record.color];
 
     bristolIcon.style.setProperty('--inner', `var(--inner-${record.color})`);
     bristolIcon.style.setProperty('--outer', `var(--outer-${record.color})`);
@@ -627,9 +576,9 @@ volumeRange.oninput = () => {
 }
 
 const setVolume = () => {
-    volumeValue.innerText = getVolume(volumeRange.value) + ' гр';
+    volumeValue.innerText = getVolume(volumeRange.value) + ' ' + S.g;
     volumeValue.style.left = `calc(${volumeRange.value}% - ${0.45 * volumeRange.value}px)`;
-    volumeLabel.innerText = VOLUMES[Math.floor(volumeRange.value / 20)];
+    volumeLabel.innerText = S.volumes[Math.floor(volumeRange.value / 20)];
     volumeRange.style.setProperty('--value', `${volumeRange.value}%`);
 }
 
@@ -647,18 +596,18 @@ tagButtons.onclick = e => {
 
 // Форма
 
-function setForm() {
+function setShape() {
     const pooped = new Date(record.pooped);
 
     poopedDate.innerText = getDateText(pooped);
     poopedTime.innerText = getTimeText(pooped);
 
     if (record.created) {
-        rejectAction.innerText = 'Удалить';
-        approveAction.innerText = 'Обновить';
+        rejectAction.innerText = S.remove;
+        approveAction.innerText = S.update;
     } else {
-        rejectAction.innerText = 'Отменить';
-        approveAction.innerText = 'Создать';
+        rejectAction.innerText = S.cancel;
+        approveAction.innerText = S.create;
     }
 
     for (const icon of bristolIcons.children) {
@@ -680,7 +629,7 @@ function setForm() {
 
 // Добавление тегов
 
-const viewport = window.visualViewport;
+// const viewport = window.visualViewport;
 
 const openTagsEditor = () => {
     editTagsButton.classList.add('hidden');
@@ -734,7 +683,7 @@ tagActions.onclick = e => {
 
 let add, update, hour, minute;
 
-const handRadius = 16, dr = 4;
+const handRadius = 16;
 const clock = document.getElementById('clock');
 const hand = document.getElementById('hand');
 const dayButton = document.getElementById('day');
@@ -744,9 +693,8 @@ const line = document.getElementById('line');
 const white = document.getElementById('white');
 const black = document.getElementById('black');
 const whenPicker = document.getElementById('when-picker');
-const whenCalendar = document.getElementById('when-calendar');
 const whenDays = document.getElementById('when-days');
-const whenMonth = document.getElementById('when-month');
+// const whenMonth = document.getElementById('when-month');
 
 const closeWhen = document.getElementById('close-when');
 const applyWhen = document.getElementById('apply-when');
@@ -756,7 +704,7 @@ const minuteLabels = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45'
 const hourLabelsAM = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
 const hourLabelsPM = ['12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
 
-const setDay = () => dayButton.innerText = day.getDate() + ' ' + MON[day.getMonth()];
+const setDay = () => dayButton.innerText = day.getDate() + ' ' + S.mons[day.getMonth()];
 const setHour = () => hourButton.innerText = String(hour).padStart(2, '0');
 const setMinute = () => minuteButton.innerText = String(minute).padStart(2, '0');
 
@@ -958,15 +906,12 @@ clock.addEventListener('pointercancel', e => {
 closeWhen.onclick = closeWhenPicker;
 applyWhen.onclick = applyWhenPicker;
 
-render();
-
-
 // Загрузка
 
 const loadTags = () => {
     console.log('loadTags')
     const t = localStorage.getItem('tags');
-    tags = t ? JSON.parse(t).filter(Boolean) : defaultTags;
+    tags = t ? JSON.parse(t).filter(Boolean) : S.defaultTags;
 };
 
 const loadRecords = () => {
@@ -1015,7 +960,7 @@ const rangeLabel = document.getElementById('range-label');
 
 const W = 0;
 const M = 1;
-const Y = 2;
+// const Y = 2;
 
 
 let period = W;
@@ -1064,14 +1009,12 @@ const getRange = (date) => {
     return [start, end];
 }
 
-const formatDate = (date) => date.getDate() + ' ' + MON[date.getMonth()];
-
 function renderRange() {
     if (period === W) {
         const [start, end] = getRange(currentDate);
         rangeLabel.innerHTML =
-            `<span>${formatDate(start)}</span><span>—</span><span>${formatDate(end)}</span>`;
-    } else if (period === M) rangeLabel.innerHTML = MONTH[currentDate.getMonth()];
+            `<span>${getDateText(start)}</span><span>—</span><span>${getDateText(end)}</span>`;
+    } else if (period === M) rangeLabel.innerHTML = S.months[currentDate.getMonth()];
     else rangeLabel.innerHTML = currentDate.getFullYear().toString();
 }
 
@@ -1094,7 +1037,7 @@ function getBuckets(start, end) {
 
     if (period === W) {
         for (let i = 0; i < 7; i++) {
-            buckets.push({label: WD[i], start: new Date(start), end: endOfDay(start)});
+            buckets.push({label: S.wds[i], start: new Date(start), end: endOfDay(start)});
             start.setDate(start.getDate() + 1);
         }
     } else if (period === M) {
@@ -1113,7 +1056,7 @@ function getBuckets(start, end) {
         for (let m = 0; m < 12; m++) {
             const s = new Date(start.getFullYear(), m, 1);
             const e = new Date(start.getFullYear(), m + 1, 0);
-            buckets.push({label: MN[m], start: s, end: endOfDay(e)});
+            buckets.push({label: S.ms[m], start: s, end: endOfDay(e)});
         }
     }
     console.log(buckets)
@@ -1133,7 +1076,7 @@ function renderHList(id, entries) {
     const container = document.getElementById(id);
 
     if (!entries.length) {
-        container.innerHTML = '<div class="empty">Нет данных за период</div>';
+        container.innerHTML = `<div class="empty">${S.noRecords}</div>`;
         container.style.removeProperty('--total');
         return;
     }
@@ -1141,86 +1084,49 @@ function renderHList(id, entries) {
     const total = Math.max(...entries.map(e => e.count));
     container.style.setProperty('--total', total.toString());
 
-    container.innerHTML = entries.map(e => {
-        const fails = e.fails || 0;
-        return `
-                <div class="h-col" style="--color: var(${e.color})">
-                    <div class="h-label">${e.label}</div>
-                    <div class="h-value" style="--count: ${e.count}">
-                        <div class="h-bar ${fails ? 'split' : ''}" style="--fails: ${fails}"></div>
-                        <span class="h-number">${e.count}</span>
+    container.innerHTML = entries.map(({label, color, count, fails}) => {
+        return `<div class="h-col" style="--color: var(${color})">
+                    <div class="h-label">${label}</div>
+                    <div class="h-value" style="--count: ${count}">
+                        <div class="h-bar ${fails ? 'split' : ''}" style="--fails: ${fails || 0}"></div>
+                        <span class="h-number">${count}</span>
                     </div>
-                </div>
-            `;
+                </div>`;
     }).join('');
 }
 
-// function renderHList(id, entries) {
-//     const container = document.getElementById(id);
-//
-//     if (!entries.length) {
-//         container.innerHTML = '<div class="empty">Нет данных за период</div>';
-//         container.style.removeProperty('--total');
-//         return;
-//     }
-//
-//     const total = Math.max(...entries.map(e => e.count));
-//     container.style.setProperty('--total', total.toString());
-//
-//     container.innerHTML = entries.map(e => {
-//         return `
-//                 <div class="h-col" style="--color: var(${e.color})">
-//                     <div class="h-label">${e.label}</div>
-//                     <div class="h-value" style="--count: ${e.count}">
-//                         <div class="h-bar"></div>
-//                         <span class="h-number">${e.count}</span>
-//                     </div>
-//                 </div>
-//             `;
-//     }).join('');
-// }
+function renderVChart(id, buckets, values, decimals, normal, color = 'blue', value = 0) {
+    console.assert(normal > 0);
 
-function renderVChart(id, buckets, values, decimals = 1, normal = 0, color = 'blue', value = 0) {
     const container = document.getElementById(id);
-
-    console.log(container)
-    console.log(container.previousElementSibling)
     container.parentElement.firstElementChild.lastElementChild.innerText = Math.round(value * decimals) / decimals;
 
-    if (!values.some(v => v != null && v > 0)) {
-        container.innerHTML = '<div class="empty">Нет данных за период</div>';
+    if (!values.some(v => v > 0)) {
+        container.innerHTML = `<div class="empty">${S.noRecords}</div>`;
         return;
     }
 
-    const total = Math.max(...values.filter(v => v != null && v > 0), normal) * 1.08;
+    const total = Math.max(...values.filter(v => v > 0), normal) * 1.08;
 
-    const barsHtml = buckets.map((b, i) => {
-        const v = values[i];
-        if (v == null || v === 0) {
-            return `<div class="v-col"><span class="v-label">${b.label}</span></div>`;
+    const barsHtml = buckets.map(({label}, i) => {
+        const count = values[i];
+        if (count > 0) {
+            const number = Math.round(count * decimals) / decimals;
+            return `<div class="v-col" style="--count: ${count}">
+                        <span class="v-number">${number}</span>
+                        <div class="v-bar"></div>
+                        <span class="v-label">${label}</span>
+                    </div>`;
         }
-        const number = Math.round(v * decimals) / decimals;
-        return `
-                <div class="v-col" style="--count: ${v}">
-                    <span class="v-number">${number}</span>
-                    <div class="v-bar"></div>
-                    <span class="v-label">${b.label}</span>
-                </div>
-            `;
+        return `<div class="v-col"><span class="v-label">${label}</span></div>`;
     }).join('');
 
-    const normalHtml = normal != null && normal > 0
-        ? `<span class="v-normal" style="--count: ${normal}">
-                   <span>${Math.round(normal * decimals) / decimals}</span>
-               </span>`
-        : '';
-
-    container.innerHTML = `
-            <section style="--total: ${total}; --color: var(--${color})">
-                ${normalHtml}
-                <div class="v-row">${barsHtml}</div>
-            </section>
-        `;
+    container.innerHTML = `<section style="--total: ${total}; --color: var(--${color})">
+        <span class="v-normal" style="--count: ${normal}">
+            <span>${Math.round(normal * decimals) / decimals}</span>
+        </span>
+        <div class="v-row">${barsHtml}</div>
+    </section>`;
 }
 
 function renderTags(records) {
@@ -1251,7 +1157,7 @@ function renderColor(records) {
 
     const entries = [...map.entries()]
         .map(([color, count]) => ({
-            label: COLORS[color],
+            label: S.colors[color],
             count,
             color: `--inner-${color}`
         }))
@@ -1260,19 +1166,19 @@ function renderColor(records) {
     renderHList('color-list', entries);
 }
 
-function renderForm(records) {
+function renderShape(records) {
     const map = new Map();
     records.forEach(r => map.set(r.bristol, (map.get(r.bristol) || 0) + 1));
 
     const entries = [...map.entries()]
         .map(([bristol, count]) => ({
-            label: BR[bristol],
+            label: S.brs[bristol],
             count,
             color: '--blue'
         }))
         .sort((a, b) => b.count - a.count);
 
-    renderHList('form-list', entries);
+    renderHList('shape-list', entries);
 }
 
 function renderBristol(records, buckets) {
@@ -1320,7 +1226,7 @@ function renderStats() {
 
     renderTags(dst);
     renderColor(success);
-    renderForm(dst);
+    renderShape(dst);
     renderBristol(success, buckets);
     renderCount(success, buckets);
     renderVolume(success, buckets);
@@ -1351,11 +1257,11 @@ periodArea.onclick = e => {
 
 (function () {
     // loadTheme();
-    // setLanguage();
+    setLanguage();
     loadTags();
     loadRecords();
     renderPageCalendar();
     renderChosenRecords();
-    setForm();
+    setShape();
     // setRecords();
 })();

@@ -6,6 +6,7 @@ const URLS = [
     `${GHPATH}/`,
     `${GHPATH}/index.html`,
     `${GHPATH}/style.css`,
+    `${GHPATH}/data.js`,
     `${GHPATH}/script.js`,
     `${GHPATH}/sprite.svg`,
     `${GHPATH}/icon.svg`,

@@ -421,10 +421,6 @@ nav {
     margin: 0 auto;
 }
 
-.to {
-    padding: 10px;
-}
-
 .active > svg {
     stroke: var(--accent);
 }
