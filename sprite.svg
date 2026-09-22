@@ -47,6 +47,17 @@
     <symbol id="close" viewBox="0 0 24 24">
         <path d="M4 8L12 16M12 8L4 16"/>
     </symbol>
+    <symbol id="back" viewBox="0 0 24 24">
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <polyline points="10 19 3 12 10 5"/>
+    </symbol>
+
+    <symbol id="save" viewBox="0 0 24 24">
+        <path d="M2 12L10 20L22 2"/>
+    </symbol>
+    <symbol id="cancel" viewBox="0 0 24 24">
+        <path d="M4 4L20 20M20 4L4 20"/>
+    </symbol>
 
     <symbol id="add" viewBox="0 0 24 24">
         <line x1="12" y1="6" x2="12" y2="18"/>
@@ -59,6 +70,34 @@
         <path d="M6.2 15.6a6.4 6.4 0 0 0 11.3 2.1L19 16"/>
         <path d="M19 19.5v-3.7h-3.7"/>
     </symbol>
+
+
+    <symbol id="male" viewBox="0 0 24 24">
+        <circle cx="12" cy="3" r="2.5"/>
+        <rect x="7.5" y="7" width="9" height="9" rx="2" stroke-dasharray="13"/>
+        <rect x="7.5" y="7" width="9" height="9" rx="1" stroke-dasharray="6 100" stroke-dashoffset="-11.8"/>
+        <rect x="7.5" y="7" width="9" height="9" rx="1" stroke-dasharray="6 100" stroke-dashoffset="-23.5"/>
+        <line x1="9.2" y1="16" x2="9.2" y2="23"/>
+        <line x1="12" y1="16" x2="12" y2="23"/>
+        <line x1="14.8" y1="16" x2="14.8" y2="23"/>
+    </symbol>
+    <symbol id="female" viewBox="0 0 24 24">
+        <circle cx="12" cy="3" r="2.5"/>
+        <path d="M10.3 23
+         L10.3 18.5
+         L7.5 18.5
+         L8 16.5
+         L6 16
+         L9 7
+         L15 7
+         L18 16
+         L16 16.5
+         L16.5 18.5
+         L13.7 18.5
+         L13.7 23
+    "/>
+    </symbol>
+
 
     <!-- ==========================================================
          НАСТРОЙКИ
@@ -74,6 +113,11 @@
 
     <symbol id="shield" viewBox="0 0 24 24" stroke="var(--green)">
         <path d="M12 3.8 18.5 6v4.3c0 3.9-2.6 7.3-6.5 8.9-3.9-1.6-6.5-5-6.5-8.9V6L12 3.8Z"/>
+    </symbol>
+
+    <symbol id="person" viewBox="0 0 24 24">
+        <circle cx="12" cy="5" r="4"/>
+    <ellipse cx="12" cy="17" rx="8" ry="4"/>
     </symbol>
 
     <!-- ==========================================================
@@ -175,5 +219,6 @@
         <ellipse cx="25" cy="14" rx="7" ry="1" stroke-dasharray="4 24"/>
         <ellipse cx="21" cy="7" rx="7" ry="1" stroke-dasharray="4 100" stroke-dashoffset="-14"/>
     </symbol>
+
 
 </svg>

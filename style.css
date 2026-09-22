@@ -8,7 +8,7 @@
     --icon: #5f646e;
     --head: white;
     --line: #e7e7e7;
-    --fade: #fafafa;
+    --fade: #f2f1ef;
 
     --green: #4aaf8c;
     --blue: #7a82da;
@@ -21,6 +21,7 @@
     --inner: none;
     --outer: gray;
     --width: 100;
+    --radius: 12px;
 
     --count: 0;
     --fails: 0;
@@ -56,7 +57,7 @@
         --head: #333333;
         --icon: #bcb6a6;
         --line: #444444;
-        --fade: #363636;
+        --fade: #2d2d2d;
         --help: #838282;
 
         --accent: var(--yellow);
@@ -122,21 +123,67 @@ body {
    ========================================================================== */
 
 /* --- Скрытие --- */
-.hidden { display: none !important; }
+.hidden {
+    display: none !important;
+}
 
 /* --- Типографика --- */
-.gray   { color: gray; }
-.small  { font-size: 14px; }
-.big    { font-size: 20px !important; }
-.mono   { font-variant-numeric: tabular-nums; }
-.accent { color: var(--accent); }
-.red    { color: var(--red); border-color: var(--red); }
-.green  { color: var(--green); stroke: var(--green); }
+.gray {
+    color: gray;
+}
+
+.small {
+    font-size: 14px;
+}
+
+.big {
+    font-size: 20px !important;
+}
+
+.mono {
+    font-variant-numeric: tabular-nums;
+}
+
+.accent {
+    color: var(--accent);
+}
+
+.help {
+    color: var(--help);
+}
+
+.red {
+    color: var(--red);
+    border-color: var(--red);
+    stroke: var(--red);
+}
+
+.blue {
+    color: var(--blue);
+    border-color: var(--blue);
+    stroke: var(--blue);
+}
+
+.green {
+    color: var(--green);
+    stroke: var(--green);
+}
 
 /* --- Выравнивание --- */
-.center { align-content: center; text-align: center; justify-content: center; }
-.left   { text-align: left; }
-.right  { margin-left: auto; max-height: 50px; }
+.center {
+    align-content: center;
+    text-align: center;
+    justify-content: center;
+}
+
+.left {
+    text-align: left;
+}
+
+.right {
+    margin-left: auto;
+    max-height: 50px;
+}
 
 /* --- Раскладка --- */
 .col {
@@ -152,12 +199,29 @@ body {
 }
 
 /* --- Отступы / зазоры --- */
-.gap-8  { gap: 8px; }
-.gap-10 { gap: 10px; }
-.gap-30 { gap: 30px; }
+.gap-8 {
+    gap: 8px;
+}
 
-.pad-10 { padding: 10px; }
-.pad-20 { padding: 20px; }
+.gap-10 {
+    gap: 10px;
+}
+
+.gap-15 {
+    gap: 15px;
+}
+
+.gap-30 {
+    gap: 30px;
+}
+
+.pad-10 {
+    padding: 10px;
+}
+
+.pad-20 {
+    padding: 20px;
+}
 
 /* --- Контейнеры --- */
 .width-500 {
@@ -167,19 +231,8 @@ body {
     position: relative;
 }
 
-.over {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    z-index: 10;
-}
-
 /* --- Инлайновые метки (счётчики на иконках) --- */
+
 small {
     position: absolute;
     font-size: 12px;
@@ -256,6 +309,13 @@ button svg {
     height: 40px;
 }
 
+.pic {
+    width: 150px;
+    padding: 10px;
+    aspect-ratio: 1;
+    stroke-width: 1;
+}
+
 /* --- Кнопки-таблетки --- */
 .tap {
     padding: 6px 10px;
@@ -269,16 +329,6 @@ button svg {
 .tap.selected {
     background: var(--accent);
     color: var(--bg);
-}
-
-/* --- Шапка экранов --- */
-header {
-    position: sticky;
-    border-bottom: 1px solid var(--line);
-    border-radius: 0 0 30px 30px;
-    padding: 12px 20px;
-    background-color: var(--head);
-    gap: 8px;
 }
 
 /* --- Заголовки --- */
@@ -320,6 +370,7 @@ footer {
     justify-content: center;
     align-items: center;
     max-height: 50px;
+    max-width: 500px;
 }
 
 footer button {
@@ -406,6 +457,7 @@ nav {
     position: fixed;
     width: 100%;
     bottom: 0;
+    height: 70px;
     padding: 8px max(12px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom));
     background: var(--head);
     border-radius: 20px 20px 0 0;
@@ -414,11 +466,15 @@ nav {
     z-index: 1;
 }
 
-#nav {
+nav > div {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     max-width: 600px;
     margin: 0 auto;
+}
+
+nav > div > button {
+    padding: 10px;
 }
 
 .active > svg {
@@ -432,7 +488,8 @@ nav {
 #calendar {
     width: 100%;
     touch-action: pan-y;
-    overflow: hidden;
+    overflow-x: clip;
+    overflow-y: visible;
 }
 
 #calendar h2 {
@@ -450,7 +507,8 @@ nav {
     width: calc(300% + 60px);
     transition: none;
     touch-action: pan-y;
-    overflow: hidden;
+    overflow-x: clip;
+    overflow-y: visible;
 }
 
 #calendars > div {
@@ -465,6 +523,7 @@ nav {
     justify-items: center;
     padding: 0 20px;
 }
+
 
 .days span {
     z-index: 1;
@@ -493,8 +552,13 @@ nav {
     position: relative;
 }
 
-.today  { color: var(--accent); }
-.future { color: gray; }
+.today {
+    color: var(--accent);
+}
+
+.future {
+    color: gray;
+}
 
 .days .selected {
     background: var(--accent) !important;
@@ -623,23 +687,26 @@ div.color {
    9. НИЖНИЕ ШТОРКИ (редактор тегов, пикер даты/времени)
    ========================================================================== */
 
+#person-picker,
 #tags-editor,
 #when-picker {
-    position: absolute;
+    position: fixed;
     width: 100%;
     bottom: 0;
+    left: 0;
     z-index: 11;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px 10px max(10px, env(safe-area-inset-bottom));
-    background: var(--head);
+    background: var(--bg);
     border-top: 1px solid var(--line);
     border-radius: 20px 20px 0 0;
     transform: translateY(100%);
     transition: transform 220ms;
 }
 
+#person-picker.open,
 #tags-editor.open,
 #when-picker.open {
     transform: translateY(0);
@@ -653,6 +720,11 @@ div.color {
     gap: 10px;
     padding: 10px 10px 40px;
     position: relative;
+}
+
+#tag-actions > button {
+    border-color: var(--red);
+    color: var(--red);
 }
 
 #create-tag {
@@ -685,14 +757,15 @@ div.color {
 }
 
 /* --- Часы --- */
-#watch {
+header {
     padding-bottom: 10px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
-#watch button {
+header button {
+    line-height: 1;
     font-size: 24px;
 }
 
@@ -826,6 +899,7 @@ div.color {
     color: var(--bg);
     transition: color 0.2s ease;
 }
+
 
 /* --- Стрелки диапазона --- */
 #range {
@@ -1006,9 +1080,145 @@ div.color {
    12. СТРАНИЦА НАСТРОЕК
    ========================================================================== */
 
-#settings-page a,
-#settings-page button {
+#person-page > button,
+#person-page > a {
     display: flex;
     gap: 10px;
-    padding: 15px 0;
+    padding: 10px 20px;
+    width: 100%;
+}
+
+#profile {
+    max-width: 500px;
+    width: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 0 10px 60px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.label {
+    color: var(--help);
+    font-size: 13px;
+}
+
+.input {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 14px;
+    border: 1px solid var(--head);
+    border-radius: var(--radius);
+    background: var(--head);
+    color: var(--text);
+    font: inherit;
+    outline: 0;
+}
+
+.input:focus {
+    border: 1px solid var(--accent);
+}
+
+.input::placeholder {
+    color: var(--help);
+}
+
+#birthdate,
+#weight {
+    font-variant-numeric: tabular-nums;
+}
+
+#birthdate::selection,
+#weight::selection {
+    background: transparent;
+}
+
+.sex {
+    flex: 1;
+}
+
+.weight {
+    max-width: 100px;
+}
+
+.weight > div {
+    position: relative;
+}
+
+.weight > div .input {
+    padding-right: 42px;
+}
+
+.unit {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    color: var(--help);
+    font-size: 15px;
+    pointer-events: none;
+}
+
+#sex {
+    position: relative;
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+}
+
+#sex::before {
+    content: "";
+    position: absolute;
+    inset: 4px auto 4px 4px;
+    width: calc(50% - 6px);
+    border-radius: 9px;
+    background: var(--accent);
+    transition: transform .28s;
+}
+
+#sex.male::before {
+    transform: translateX(calc(100% + 4px));
+}
+
+.segment input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    clip-path: inset(50%);
+}
+
+.segment label {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 43px;
+    padding: 0 10px;
+    border-radius: 9px;
+    color: var(--muted);
+    font-size: 15px;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+}
+
+.segment input:checked + label {
+    color: var(--bg);
+    transition: color .28s;
+}
+
+.segment input:focus-visible + label {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
 }

@@ -76,16 +76,21 @@ const getFiber = (age, sex) => {
     return sex ? 30 : 21;
 };
 
-const getDefaultPerson = () => ({sex: false, weight: 63, height: 157, age: 31, activity: 1.2, frequency: 0.8});
-let person = getDefaultPerson();
+const defaultPerson = {
+    sex: true,
+    weight: 65,
+    age: 25,
+    activity: 1.2,
+    frequency: 0.8
+};
+
+let person;
 
 const setPersonVolume = () => {
     const fiber = 0.014 * getBMR(person) * person.activity;
     const volume = getStool(person) + 1.76 * (fiber - getFiber(person));
     person.volume = Math.max(50, Math.min(500, Math.round(volume / person.frequency)));
 };
-
-setPersonVolume();
 
 const minVolume = 40;
 const maxVolume = 400;
@@ -98,13 +103,13 @@ const getVolume = i => {
     return maxVolume;
 }
 
-let day = new Date();
-let today = new Date(day);
+let date = new Date();
+let today = new Date(date);
 
 const getDate = (date) => date.getFullYear() * 10000 + date.getMonth() * 100 + date.getDate();
 
 const getDefaultRecord = () => ({
-    pooped: getDate(day) === getDate(today) ? new Date() : day,
+    pooped: getDate(date) === getDate(today) ? new Date() : date,
     bristol: 4,
     volume: 50,
     color: 'brown',
@@ -149,25 +154,29 @@ let tags = [];
 
 // Навигация
 
-const toCalendar = document.getElementById("to-calendar");
-
 const pages = {
     calendar: document.getElementById("calendar-page"),
     record: document.getElementById('record-page'),
     stats: document.getElementById("stats-page"),
-    settings: document.getElementById("settings-page")
+    person: document.getElementById("person-page")
 };
 let page = pages.calendar;
 
 const nav = document.getElementById('nav');
-const [calendarLink, recordLink, statsLink, settingsLink] = nav.children;
+const [calendarLink, recordLink] = nav.children;
 
 let link = calendarLink
 
 const toggle = () => {
     page.classList.toggle('hidden');
     link.classList.toggle('active');
-    if (page === pages.record) nav.parentElement.classList.toggle('hidden');
+    if (page === pages.record) {
+        nav.classList.add('hidden');
+        recordNav.classList.remove('hidden');
+    } else if (page === pages.calendar) {
+        nav.classList.remove('hidden');
+        recordNav.classList.add('hidden');
+    }
 }
 
 nav.onclick = e => {
@@ -178,10 +187,12 @@ nav.onclick = e => {
     link = button;
     if (page === pages.record) {
         record = getDefaultRecord();
-        setShape();
+        renderRecord();
     } else if (page === pages.stats) {
         renderRange();
         renderStats();
+    } else if (page === pages.person) {
+        renderPerson();
     }
     toggle();
 }
@@ -193,10 +204,14 @@ const toCalendarPage = () => {
     toggle();
 }
 
-toCalendar.onclick = e => {
+const recordNav = nav.nextElementSibling;
+const rejectAction = recordNav.firstElementChild;
+const approveAction = recordNav.lastElementChild;
+
+rejectAction.onclick = e => {
     e.preventDefault();
     toCalendarPage();
-    calendarDate = new Date(day);
+    calendarDate = new Date(date);
     calendarDate.setDate(1);
     renderPageCalendar();
 }
@@ -204,9 +219,8 @@ toCalendar.onclick = e => {
 // 1. Календарь
 
 const calendar = document.getElementById('calendar');
-// const days = document.getElementById('days');
 
-let calendarDate = new Date(day);
+let calendarDate = new Date(date);
 let chosenButton;
 
 const addPageMonth = (delta) => {
@@ -231,10 +245,10 @@ calendar.addEventListener('click', e => {
     chosenButton.classList.remove('big');
     chosenButton = button;
 
-    day = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), +chosenButton.innerText, 12);
+    date = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), +chosenButton.innerText, 12);
     chosenButton.classList.add('big');
 
-    renderChosenRecords();
+    if (!renderChosenRecords()) recordLink.click();
 });
 
 let calendarPages = {};
@@ -300,7 +314,7 @@ const getCalendarPage = (delta = 0) => {
     const last = new Date(y, m + 1, 0).getDate();
 
     const t = getDate(today);
-    const c = getDate(day);
+    const c = getDate(date);
 
     const getClass = (d) => {
         if (d === c) return 'big';
@@ -354,10 +368,11 @@ const chosenRecords = document.getElementById('chosen-records');
 const chosenDay = document.getElementById('chosen-day');
 
 const renderChosenRecords = () => {
-    const d = getDate(day);
-    chosenDay.innerText = day.getDate() + ' ' + S.mons[day.getMonth()];
+    const d = getDate(date);
+    chosenDay.innerText = date.getDate() + ' ' + S.mons[date.getMonth()];
     const src = records.filter(({pooped}) => getDate(pooped) === d).sort((a, b) => a.pooped - b.pooped);
     chosenRecords.innerHTML = src.length ? src.map(recordHtml).join('') : `<div class="small gray center">нет записей</div>`;
+    return src.length > 0;
 }
 
 chosenRecords.onclick = e => {
@@ -365,7 +380,7 @@ chosenRecords.onclick = e => {
     if (!button) return
     const created = +button.dataset.created;
     record = records.find(r => r.created === created);
-    setShape();
+    renderRecord();
     toggle();
     page = pages.record;
     link = recordLink;
@@ -452,8 +467,7 @@ calendar.addEventListener('pointercancel', stopDragging);
 
 // 2. Форма добавления
 
-const approveAction = document.getElementById("approve");
-const rejectAction = document.getElementById("reject");
+const removeAction = document.getElementById('remove');
 
 const poopedDate = document.getElementById('pooped-date');
 const poopedTime = document.getElementById('pooped-time');
@@ -478,15 +492,14 @@ const applyTags = document.getElementById('apply-tags');
 
 const overlay = document.getElementById('overlay');
 
-rejectAction.onclick = e => {
+
+removeAction.onclick = e => {
     e.preventDefault();
-    if (record.created) {
-        records = records.filter(({created}) => created !== record.created);
-        saveRecord();
-        renderChosenRecords();
-        calendarPages = {};
-        renderPageCalendar();
-    }
+    records = records.filter(({created}) => created !== record.created);
+    saveRecord();
+    renderChosenRecords();
+    calendarPages = {};
+    renderPageCalendar();
     toCalendarPage();
 };
 
@@ -585,7 +598,7 @@ const setVolume = () => {
 // 4. Теги
 
 const getTagButtonsHtml = () => tags.map(tag => `<button class="tap ${record.tags.includes(tag) ? 'selected' : ''}">${tag}</button>`).join('');
-const getTagActionsHtml = () => tags.map(tag => `<button class="tap red">${tag}</button>`).join('');
+const getTagActionsHtml = () => tags.map(tag => `<button class="tap">${tag}</button>`).join('');
 
 tagButtons.onclick = e => {
     const button = e.target.closest('button');
@@ -594,20 +607,18 @@ tagButtons.onclick = e => {
 }
 
 
-// Форма
+// Запись
 
-function setShape() {
+function renderRecord() {
     const pooped = new Date(record.pooped);
 
     poopedDate.innerText = getDateText(pooped);
     poopedTime.innerText = getTimeText(pooped);
 
     if (record.created) {
-        rejectAction.innerText = S.remove;
-        approveAction.innerText = S.update;
+        removeAction.classList.remove('hidden');
     } else {
-        rejectAction.innerText = S.cancel;
-        approveAction.innerText = S.create;
+        removeAction.classList.add('hidden');
     }
 
     for (const icon of bristolIcons.children) {
@@ -704,7 +715,7 @@ const minuteLabels = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45'
 const hourLabelsAM = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
 const hourLabelsPM = ['12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
 
-const setDay = () => dayButton.innerText = day.getDate() + ' ' + S.mons[day.getMonth()];
+const setDay = () => dayButton.innerText = date.getDate() + ' ' + S.mons[date.getMonth()];
 const setHour = () => hourButton.innerText = String(hour).padStart(2, '0');
 const setMinute = () => minuteButton.innerText = String(minute).padStart(2, '0');
 
@@ -782,7 +793,7 @@ const renderCalendar = () => {
     const last = new Date(y, m + 1, 0).getDate();
 
     const today = getDate(new Date());
-    const selected = getDate(day);
+    const selected = getDate(date);
 
     const getDayType = (n) => {
         const d = getDate(new Date(y, m, n));
@@ -808,14 +819,14 @@ const toDay = () => {
     minuteButton.classList.remove('selected');
     add = addMonth;
     update = null;
-    calendarDate = new Date(day);
+    calendarDate = new Date(date);
     calendarDate.setDate(1);
     renderCalendar();
 };
 
 const openWhenPicker = (to) => {
     console.log('openWhenPicker')
-    day = new Date(record.pooped);
+    date = new Date(record.pooped);
     hour = record.pooped.getHours();
     minute = record.pooped.getMinutes();
 
@@ -836,7 +847,7 @@ const closeWhenPicker = () => {
 };
 
 const applyWhenPicker = () => {
-    record.pooped = new Date(day);
+    record.pooped = new Date(date);
     record.pooped.setHours(hour, minute);
     render();
     closeWhenPicker();
@@ -878,7 +889,7 @@ document.getElementById('when-next').onclick = () => add(1);
 whenDays.onclick = e => {
     const button = e.target.closest('button');
     if (!button) return;
-    day = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), +button.innerText);
+    date = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), +button.innerText);
     setDay();
     toHour();
 };
@@ -906,13 +917,76 @@ clock.addEventListener('pointercancel', e => {
 closeWhen.onclick = closeWhenPicker;
 applyWhen.onclick = applyWhenPicker;
 
+
+// Личные данные
+
+let sex;
+
+const personPicker = document.getElementById('person-picker');
+const personButton = document.getElementById('person');
+
+const closePerson = document.getElementById('close-person');
+const applyPerson = document.getElementById('apply-person');
+
+const closePersonPicker = () => {
+    renderPerson();
+    overlay.classList.remove('open');
+    personPicker.classList.remove('open');
+};
+
+const applyPersonPicker = () => {
+    person.weight = +weightInput.value || defaultPerson.weight;
+    if (validDate(birthdateInput.value)) {
+        person.birthdate = +digits(birthdateInput.value);
+        person.age = getAge(person.birthdate);
+    } else {
+        person.age = defaultPerson.age;
+        person.birthdate = null;
+    }
+    person.sex = sex;
+    savePerson();
+    closePersonPicker();
+};
+
+const setSex = () => {
+    sex = person.sex;
+
+    sexInput.classList.toggle('male', sex);
+    document.getElementById(sex ? 'male' : 'female').checked = true;
+}
+
+const openPersonPicker = () => {
+    console.log('openPersonPicker')
+
+    birthdate.value = person.birthdate ? format(person.birthdate.toString()) : '';
+    weightInput.value = person.weight || '';
+
+    overlay.onclick = closePersonPicker;
+    overlay.classList.add('open');
+    personPicker.classList.add('open');
+};
+
+closePerson.onclick = closePersonPicker;
+applyPerson.onclick = applyPersonPicker;
+
+personButton.onclick = () => openPersonPicker();
+
 // Загрузка
 
 const loadTags = () => {
     console.log('loadTags')
     const t = localStorage.getItem('tags');
     tags = t ? JSON.parse(t).filter(Boolean) : S.defaultTags;
+    if (tags.length === 0) tags = S.defaultTags;
 };
+
+const loadPerson = () => {
+    console.log('loadPerson')
+    const t = localStorage.getItem('person');
+    person = t ? JSON.parse(t) : {...defaultPerson};
+    setPersonVolume();
+};
+
 
 const loadRecords = () => {
     console.log('loadRecords')
@@ -934,6 +1008,11 @@ const saveRecord = () => {
 const saveTags = () => {
     console.log('saveTags');
     localStorage.setItem('tags', JSON.stringify(tags));
+}
+
+const savePerson = () => {
+    console.log('savePerson');
+    localStorage.setItem('person', JSON.stringify(person));
 }
 
 // 2.3
@@ -1254,14 +1333,305 @@ periodArea.onclick = e => {
     renderStats();
 };
 
+// Настройки
+
+function getAge(birthdate) {
+    const D = Math.floor(birthdate / 1000000);
+    const M = Math.floor(birthdate / 10000) % 100;
+    const Y = birthdate % 10000;
+
+    const now = new Date();
+    let age = now.getFullYear() - Y;
+    const m = now.getMonth() - M;
+    const d = now.getDate() - D;
+    return age - (m < 0 || (m === 0 && d <= 0));
+}
+
+function renderPerson() {
+    console.log('renderPerson')
+    personButton.lastElementChild.innerHTML = `<span>${person.sex ? S.male : S.female}</span> 
+        <span class="help">${person.age}</span><span class="help">${S.y}</span> • 
+        <span class="help">${person.weight}</span><span class="help">${S.kg}</span>`
+    setSex();
+}
+
+// Ввод персональных данных
+
+const birthdateInput = document.getElementById('birthdate');
+const weightInput = document.getElementById('weight');
+const sexInput = document.getElementById('sex');
+
+/* ---------- Дата рождения ---------- */
+
+const start = [0, 2, 4];
+const pos = [0, 3, 6];
+const size = [2, 2, 4];
+const limit = [31, 12];
+
+let part = 0;
+let replace = false;
+
+const digits = value => value.replace(/\D/g, '').slice(0, 8);
+
+const format = value => {
+    value = digits(value);
+
+    return value.length < 3
+        ? value
+        : value.length < 5
+            ? `${value.slice(0, 2)}.${value.slice(2)}`
+            : `${value.slice(0, 2)}.${value.slice(2, 4)}.${value.slice(4)}`;
+};
+
+const move = p => requestAnimationFrame(() => birthdateInput.setSelectionRange(p, p));
+
+const select = p => {
+    part = p;
+    replace = true;
+
+    requestAnimationFrame(() =>
+        birthdateInput.setSelectionRange(pos[p], pos[p] + size[p])
+    );
+};
+
+const getPart = p => p < 3 ? 0 : p < 6 ? 1 : 2;
+
+const validDate = value => {
+    const [, d, m, y] = value.match(/^(\d{2}).(\d{2}).(\d{4})$/) || [];
+
+    if (!d) return false;
+    const date = new Date(+y, +m - 1, +d);
+
+    return date.getDate() === +d &&
+        date.getMonth() === +m - 1 &&
+        date.getFullYear() === +y &&
+        +y >= 1900 && +y <= new Date().getFullYear();
+};
+
+birthdateInput.addEventListener('keydown', e => {
+    const {key} = e;
+
+    if (/^\d$/.test(key)) {
+        e.preventDefault();
+
+        let value = digits(birthdateInput.value);
+        const s = start[part];
+        const n = size[part];
+        let current = replace ? '' : value.slice(s, s + n);
+
+        if (replace) {
+            value = value.slice(0, s);
+            replace = false;
+        }
+
+        if (current.length === n) return;
+
+        current += key;
+
+        if (part < 2 && current.length === 2) {
+            if (+current === 0) return;
+
+            if (+current > limit[part]) {
+                value = value.slice(0, s) + '0' + current;
+                part++;
+                birthdateInput.value = format(value);
+                move(pos[part] + 1);
+                return;
+            }
+        }
+        birthdateInput.value = format(
+            value.slice(0, s) + current + value.slice(s + n)
+        );
+
+        if (current.length === n && part < 2) {
+            part++;
+            replace = true;
+            move(pos[part]);
+        } else {
+            move(birthdateInput.value.length);
+        }
+        return;
+    }
+
+    if (key.length === 1) {
+        e.preventDefault();
+        return;
+    }
+
+    if (key === 'ArrowLeft' || key === 'ArrowRight') {
+        const p = birthdateInput.selectionStart;
+
+        if ([2, 3, 5, 6].includes(p)) {
+            e.preventDefault();
+            move(p + (key === 'ArrowLeft' ? -1 : 1));
+        }
+
+        return;
+    }
+
+    if (key !== 'Backspace' && key !== 'Delete') return;
+
+    e.preventDefault();
+
+    if (replace) {
+        birthdateInput.value = format(digits(birthdateInput.value).slice(0, start[part]));
+        replace = false;
+        move(birthdateInput.value.length);
+        return;
+    }
+
+    const p = birthdateInput.selectionStart;
+    const i = key === 'Backspace'
+        ? p - 1 - (p > 2) - (p > 5)
+        : p - (p > 2) - (p > 5);
+
+    const value = digits(birthdateInput.value);
+
+    if (i >= 0 && i < value.length) {
+        birthdateInput.value = format(value.slice(0, i) + value.slice(i + 1));
+        move(key === 'Backspace' ? Math.max(0, p - 1) : p);
+    }
+});
+
+birthdateInput.addEventListener('click', () => select(getPart(birthdateInput.selectionStart)));
+birthdateInput.addEventListener('focus', () => select(getPart(birthdateInput.selectionStart)));
+
+birthdateInput.addEventListener('paste', e => {
+    e.preventDefault();
+
+    const value = digits(e.clipboardData.getData('text'));
+
+    const d = +value.slice(0, 2);
+    if (value.length >= 2 && (d < 1 || d > 31)) return;
+
+    const m = +value.slice(2, 4);
+    if (value.length >= 4 && (m < 1 || m > 12)) return;
+
+    birthdateInput.value = format(value);
+    part = value.length < 3 ? 0 : (value.length < 5 ? 1 : 2);
+
+    replace = value.length < 8;
+    move(replace ? pos[part] : 10);
+});
+
+/* ---------- Пол ---------- */
+
+sexInput.addEventListener('change', e => {
+    sex = e.target.value === 'male';
+    sexInput.classList.toggle('male', sex);
+});
+
+/* ---------- Вес ---------- */
+
+let weightReplace = false;
+
+const normalizeWeight = value => {
+    value = value.replace(',', '.').replace(/[^\d.]/g, '');
+
+    const i = value.indexOf('.');
+    if (i >= 0) {
+        value = value.slice(0, i + 1) + value.slice(i + 1).replace(/\./g, '').slice(0, 1);
+    }
+
+    value = value.replace(/^0+(?=\d)/, '');
+    return +value;
+};
+
+weightInput.addEventListener('focus', () => {
+    weightReplace = true;
+    requestAnimationFrame(() => weightInput.setSelectionRange(0, weightInput.value.length));
+});
+
+weightInput.addEventListener('click', () => weightReplace || weightInput.setSelectionRange(0, weightInput.value.length));
+
+weightInput.addEventListener('keydown', e => {
+    const {key} = e;
+
+    if (/^\d$/.test(key)) {
+        e.preventDefault();
+
+        const current = weightReplace ? '' : weightInput.value;
+        const value = normalizeWeight(current + key);
+        if (value >= 1000) return;
+
+        if (value) {
+            weightInput.value = value.toString();
+            weightReplace = false;
+
+            const pos = weightInput.value.length;
+            weightInput.setSelectionRange(pos, pos);
+        }
+        return;
+    }
+    if (key === '.' || key === ',') {
+        e.preventDefault();
+
+        if (weightInput.value.includes('.')) return;
+
+        weightInput.value += '.';
+        weightReplace = false;
+
+        const pos = weightInput.value.length;
+        weightInput.setSelectionRange(pos, pos);
+        return;
+    }
+
+    if (key.length === 1) {
+        e.preventDefault();
+        return;
+    }
+
+    if (key === 'Backspace' || key === 'Delete') {
+        e.preventDefault();
+
+        if (weightReplace) {
+            weightInput.value = '';
+            weightReplace = false;
+        } else {
+            const p = weightInput.selectionStart;
+            const i = key === 'Backspace' ? p - 1 : p;
+
+            if (i >= 0 && i < weightInput.value.length) {
+                weightInput.value = weightInput.value.slice(0, i) + weightInput.value.slice(i + 1);
+
+                const pos = Math.max(0, p - (key === 'Backspace'));
+                weightInput.setSelectionRange(pos, pos);
+            }
+        }
+        return;
+    }
+
+    if (key === 'ArrowLeft' || key === 'ArrowRight') {
+        weightReplace = false;
+    }
+});
+
+weightInput.addEventListener('paste', e => {
+    e.preventDefault();
+
+    const value = normalizeWeight(e.clipboardData.getData('text'));
+
+    if (value) {
+        weightInput.value = value.toString();
+        weightReplace = false;
+
+        const pos = weightInput.value.length;
+        weightInput.setSelectionRange(pos, pos);
+    }
+});
+
+weightInput.addEventListener('input', () => {
+    weightInput.value = normalizeWeight(weightInput.value) || '';
+});
+
 
 (function () {
     // loadTheme();
     setLanguage();
     loadTags();
+    loadPerson();
     loadRecords();
     renderPageCalendar();
     renderChosenRecords();
-    setShape();
     // setRecords();
 })();
