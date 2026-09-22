@@ -958,12 +958,14 @@ const setSex = () => {
 const openPersonPicker = () => {
     console.log('openPersonPicker')
 
-    birthdate.value = person.birthdate ? format(person.birthdate.toString()) : '';
+    birthdateInput.value = person.birthdate ? format(person.birthdate.toString()) : '';
     weightInput.value = person.weight || '';
 
     overlay.onclick = closePersonPicker;
     overlay.classList.add('open');
     personPicker.classList.add('open');
+
+    birthdateInput.focus();
 };
 
 closePerson.onclick = closePersonPicker;
