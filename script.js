@@ -1516,6 +1516,10 @@ birthdateInput.addEventListener('paste', e => {
 
 /* ---------- Пол ---------- */
 
+sexInput.onclick = (e) => {
+    weightInput.focus();
+}
+
 sexInput.addEventListener('change', e => {
     sex = e.target.value === 'male';
     sexInput.classList.toggle('male', sex);
