@@ -99,14 +99,16 @@ const defaultPerson = {
 };
 
 
+let minVolume;
+let maxVolume;
+
 const setPersonVolume = () => {
     const fiber = 0.014 * getBMR() * 1.3;
     const volume = getStool() + 1.76 * (fiber - getFiber());
-    person.volume = Math.max(50, Math.min(300, Math.round(volume / getFrequency())));
+    person.volume = Math.max(30, Math.min(400, Math.round(volume / getFrequency())));
+    minVolume = Math.max(20, Math.round(person.volume / 4));
+    maxVolume = Math.min(500, Math.round(4 * person.volume));
 };
-
-const minVolume = 30;
-const maxVolume = 400;
 
 const getVolume = i => {
     if (i <= 10) return minVolume;
