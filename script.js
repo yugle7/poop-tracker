@@ -26,8 +26,10 @@ const setLanguage = () => {
 
 // Вычисление объема кала
 
+let person;
 
-const getBMR = ({age, sex, weight}) => {
+const getBMR = () => {
+    const {age, sex, weight} = person;
     if (sex) {
         if (age < 3) return 60.9 * weight - 54;
         if (age < 10) return 22.7 * weight + 495;
@@ -44,7 +46,8 @@ const getBMR = ({age, sex, weight}) => {
     return 10.1 * weight + 569;
 }
 
-const getStool = (age, sex) => {
+const getStool = () => {
+    const {age, sex} = person;
     if (age < 1) return 90;
     if (age < 2) return 60;
     if (age < 4) return 70;
@@ -59,7 +62,8 @@ const getStool = (age, sex) => {
     return sex ? 130 : 121
 };
 
-const getFiber = (age, sex) => {
+const getFiber = () => {
+    const {age, sex} = person;
     if (age < 2) return 10;
     if (age < 3) return 13.5;
     if (age < 4) return 14.9;
@@ -76,23 +80,32 @@ const getFiber = (age, sex) => {
     return sex ? 30 : 21;
 };
 
+
+const getFrequency = () => {
+    const {age} = person;
+    if (age < 0.1) return 3.24;
+    if (age < 0.5) return 1.99;
+    if (age < 1) return 1.66;
+    if (age < 2) return 1.53;
+    if (age < 5) return 1.15;
+    if (age < 10) return 1.02;
+    return 1.07;
+}
+
 const defaultPerson = {
     sex: true,
     weight: 65,
-    age: 25,
-    activity: 1.2,
-    frequency: 0.8
+    age: 25
 };
 
-let person;
 
 const setPersonVolume = () => {
-    const fiber = 0.014 * getBMR(person) * person.activity;
-    const volume = getStool(person) + 1.76 * (fiber - getFiber(person));
-    person.volume = Math.max(50, Math.min(500, Math.round(volume / person.frequency)));
+    const fiber = 0.014 * getBMR() * 1.3;
+    const volume = getStool() + 1.76 * (fiber - getFiber());
+    person.volume = Math.max(50, Math.min(300, Math.round(volume / getFrequency())));
 };
 
-const minVolume = 40;
+const minVolume = 30;
 const maxVolume = 400;
 
 const getVolume = i => {
@@ -988,6 +1001,7 @@ const saveTags = () => {
 
 const savePerson = () => {
     console.log('savePerson');
+    setPersonVolume();
     localStorage.setItem('person', JSON.stringify(person));
 }
 
@@ -1330,7 +1344,7 @@ function renderCount(records, buckets) {
     const groups = bucketize(records, buckets);
     const values = groups.map(g => g.length);
     const value = records.length;
-    const normal = getNormal(0.8);
+    const normal = getNormal(getFrequency());
     renderVChart('count-chart', buckets, values, 10, normal, 'blue', value);
 }
 
