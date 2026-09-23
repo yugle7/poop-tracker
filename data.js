@@ -46,10 +46,14 @@ const translations = {
         sex: 'Пол',
         female: 'Женщина',
         male: 'Мужчина',
-        f: 'Ж',
-        m: 'М',
         weight: 'Вес',
         age: 'Возраст',
+
+        yes: 'Да',
+        no: 'Нет',
+
+        removeQuestion: 'Удалить запись?',
+        resetQuestion: 'Удалить все записи?',
 
         defaultTags: [
             'Боль',
@@ -153,6 +157,11 @@ const translations = {
         male: 'Male',
         weight: 'Weight',
         age: 'Age',
+
+        removeQuestion: 'Remove record?',
+        resetQuestion: 'Remove all records?',
+        yes: 'Yes',
+        no: 'No',
 
         defaultTags: [
             'Pain',

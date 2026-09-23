@@ -62,14 +62,9 @@
         main {
             width: min(720px, calc(100% - 32px));
             margin: 0 auto;
-            padding: 40px 0 60px;
+            padding: 40px 0;
         }
 
-        article {
-            background: var(--head);
-            padding: 28px;
-            border-radius: 16px;
-        }
 
         h1 {
             margin: 0 0 8px;
@@ -102,16 +97,16 @@
             color: var(--accent);
         }
 
+        article {
+            padding: 20px;
+        }
+
         @media (max-width: 600px) {
             main {
                 width: min(100% - 20px, 720px);
-                padding: 20px 0 40px;
+                padding: 40px 0;
             }
 
-            article {
-                padding: 22px 18px;
-                border-radius: 14px;
-            }
 
             h1 {
                 font-size: 26px;
@@ -120,15 +115,87 @@
             h2 {
                 font-size: 20px;
             }
+
+            body {
+                padding-top: 24px;
+            }
         }
+
+        nav {
+            position: fixed;
+            right: 10px;
+            top: 0;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        button {
+            border: 0;
+            background: none;
+            color: inherit;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            padding: 10px;
+        }
+
+        #back {
+            position: fixed;
+            top: 8px;
+            left: 10px;
+            z-index: 9999;
+
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: var(--accent);
+            opacity: 0.6;
+            color: var(--bg);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+            text-decoration: none;
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+
+        button:active {
+            transform: scale(0.92);
+        }
+
+        .selected {
+            color: var(--accent);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
     </style>
 </head>
 
 <body>
 
 <main>
-    <article>
+    <button id="back" onclick="goBack()">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
+             stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+    </button>
+    <nav>
+        <button class="selected" data-id="eng">Eng</button>
+        <button data-id="rus">Рус</button>
+    </nav>
 
+    <article id="eng">
         <h1>Privacy Policy</h1>
 
         <div class="updated">
@@ -322,11 +389,7 @@
 
     </article>
 
-    <br/>
-
-    <article>
-
-
+    <article id="rus" class="hidden">
         <h1>Политика конфиденциальности</h1>
 
         <div class="updated">
@@ -533,6 +596,35 @@
 
     </article>
 </main>
+
+<script>
+    function goBack() {
+        if (window.opener || window.history.length <= 1) {
+            window.close();
+            setTimeout(() => {
+                window.location.href = 'https://yugle7.github.io/poop-tracker/';
+            }, 100);
+        } else {
+            history.back();
+        }
+    }
+
+
+    const nav = document.querySelector('nav');
+    let language = nav.firstElementChild;
+
+    nav.onclick = (e) => {
+        const button = e.target.closest('button');
+        if (!button || button === language) return;
+
+        language.classList.remove('selected');
+        document.getElementById(language.dataset.id).classList.add('hidden');
+        language = button;
+        document.getElementById(language.dataset.id).classList.remove('hidden');
+        language.classList.add('selected');
+    }
+
+</script>
 
 </body>
 </html>

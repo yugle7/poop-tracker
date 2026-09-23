@@ -32,8 +32,6 @@
 <section id="record-page" class="hidden">
     <div class="scroll">
         <div class="width-500 col gap-30 pad-20">
-            <button class="red pad-10" id="remove" data-i18n="remove"></button>
-
             <section>
                 <div id="bristol-label"></div>
                 <br>
@@ -364,6 +362,16 @@
         </button>
     </div>
 </nav>
+
+<div id="modal" hidden>
+    <div class="dialog" role="dialog" aria-modal="true">
+        <p id="question"></p>
+        <div class="actions">
+            <button id="confirm" data-i18n="yes"></button>
+            <button id="cancel" data-i18n="no"></button>
+        </div>
+    </div>
+</div>
 
 <script src="data.js"></script>
 <script src="script.js"></script>

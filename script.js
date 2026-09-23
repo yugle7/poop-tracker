@@ -208,14 +208,6 @@ const recordNav = nav.nextElementSibling;
 const rejectAction = recordNav.firstElementChild;
 const approveAction = recordNav.lastElementChild;
 
-rejectAction.onclick = e => {
-    e.preventDefault();
-    toCalendarPage();
-    calendarDate = new Date(date);
-    calendarDate.setDate(1);
-    renderPageCalendar();
-}
-
 // 1. Календарь
 
 const calendar = document.getElementById('calendar');
@@ -467,8 +459,6 @@ calendar.addEventListener('pointercancel', stopDragging);
 
 // 2. Форма добавления
 
-const removeAction = document.getElementById('remove');
-
 const poopedDate = document.getElementById('pooped-date');
 const poopedTime = document.getElementById('pooped-time');
 const colorLabel = document.getElementById('color-label');
@@ -492,16 +482,6 @@ const applyTags = document.getElementById('apply-tags');
 
 const overlay = document.getElementById('overlay');
 
-
-removeAction.onclick = e => {
-    e.preventDefault();
-    records = records.filter(({created}) => created !== record.created);
-    saveRecord();
-    renderChosenRecords();
-    calendarPages = {};
-    renderPageCalendar();
-    toCalendarPage();
-};
 
 approveAction.onclick = (e) => {
     console.log('approveAction');
@@ -614,12 +594,6 @@ function renderRecord() {
 
     poopedDate.innerText = getDateText(pooped);
     poopedTime.innerText = getTimeText(pooped);
-
-    if (record.created) {
-        removeAction.classList.remove('hidden');
-    } else {
-        removeAction.classList.add('hidden');
-    }
 
     for (const icon of bristolIcons.children) {
         if (record.bristol === +icon.ariaLabel) {
@@ -1017,18 +991,62 @@ const savePerson = () => {
     localStorage.setItem('person', JSON.stringify(person));
 }
 
-// 2.3
+// Модальное окно
+
+const question = document.querySelector('#question');
+const modal = document.querySelector('#modal');
+
+const confirmAction = document.querySelector('#confirm');
+const cancelAction = document.querySelector('#cancel');
+
+const toCalendarDate = () => {
+    toCalendarPage();
+    calendarDate = new Date(date);
+    calendarDate.setDate(1);
+    renderPageCalendar();
+}
+
+cancelAction.onclick = () => {
+    modal.hidden = true;
+    if (page === pages.record) toCalendarDate();
+}
+
+modal.onclick = e => {
+    if (e.target === modal) modal.hidden = true;
+};
 
 const resetButton = document.getElementById('reset');
 
-resetButton.onclick = e => {
-    e.preventDefault();
-    records.length = 0;
-    saveRecord();
-    renderChosenRecords();
-    calendarPages = {};
-    renderPageCalendar();
+resetButton.onclick = () => {
+    question.innerText = S.resetQuestion;
+    modal.hidden = false;
 }
+
+rejectAction.onclick = e => {
+    console.log('rejectAction');
+    e.preventDefault();
+    if (record.created) {
+        question.innerText = S.removeQuestion;
+        modal.hidden = false;
+    } else {
+        toCalendarDate();
+    }
+}
+
+confirmAction.onclick = (e) => {
+    modal.hidden = true;
+    e.preventDefault();
+    if (page === pages.person) {
+        records.length = 0;
+    } else if (page === pages.record) {
+        records = records.filter(({created}) => created !== record.created);
+    }
+    saveRecord();
+    calendarPages = {};
+    renderChosenRecords();
+    renderPageCalendar();
+    toCalendarPage();
+};
 
 // 3. Статистика
 
