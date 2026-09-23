@@ -123,9 +123,9 @@ const SCALES = {
     gray: 4,
     yellow: 2.5,
     orange: 2,
-    light_brown: 1.5,
+    'light-brown': 1.5,
     brown: 1,
-    dark_brown: 1.5,
+    'dark-brown': 1.5,
     black: 5,
     green: 3,
     red: 7
