@@ -55,6 +55,8 @@ const translations = {
         removeQuestion: 'Удалить запись?',
         resetQuestion: 'Удалить все записи?',
 
+        withFails: 'Ничего не вышло',
+
         defaultTags: [
             'Боль',
             'Газы',
@@ -162,6 +164,8 @@ const translations = {
         resetQuestion: 'Remove all records?',
         yes: 'Yes',
         no: 'No',
+
+        withFails: 'Nothing came of me',
 
         defaultTags: [
             'Pain',

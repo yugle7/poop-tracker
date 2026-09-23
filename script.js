@@ -1171,9 +1171,7 @@ function bucketize(records, buckets) {
 }
 
 
-function renderHList(id, entries) {
-    const container = document.getElementById(id);
-
+function renderHList(container, entries) {
     if (!entries.length) {
         container.innerHTML = `<div class="empty">${S.noRecords}</div>`;
         container.style.removeProperty('--total');
@@ -1184,10 +1182,16 @@ function renderHList(id, entries) {
     container.style.setProperty('--total', total.toString());
 
     container.innerHTML = entries.map(({label, color, count, fails}) => {
+        fails = fails || 0;
+        if (!withFails) {
+            count -= fails;
+            if (!count) return '';
+            fails = 0;
+        }
         return `<div class="h-col" style="--color: var(${color})">
                     <div class="h-label">${label}</div>
                     <div class="h-value" style="--count: ${count}">
-                        <div class="h-bar ${fails ? 'split' : ''}" style="--fails: ${fails || 0}"></div>
+                        <div class="h-bar ${fails ? 'split' : ''}" style="--fails: ${fails}"></div>
                         <span class="h-number">${count}</span>
                     </div>
                 </div>`;
@@ -1228,7 +1232,26 @@ function renderVChart(id, buckets, values, decimals, normal, color = 'blue', val
     </section>`;
 }
 
-function renderTags(records) {
+const tagList = document.getElementById('tags-list');
+const colorList = document.getElementById('color-list');
+const shapeList = document.getElementById('shape-list');
+
+
+let withFails;
+let tagEntries = [];
+
+const withFailsButton = document.getElementById('with-fails');
+const renderTagList = () => {
+    withFailsButton.style.setProperty('--color', withFails ? 'var(--accent)' : 'none');
+    renderHList(tagList, tagEntries);
+}
+
+withFailsButton.onclick = () => {
+    withFails = !withFails;
+    renderTagList();
+};
+
+const setTagEntries = (records) => {
     const counts = new Map();
     const fails = new Map();
     records.forEach(r => {
@@ -1238,7 +1261,7 @@ function renderTags(records) {
         });
     });
 
-    const entries = [...counts.entries()]
+    tagEntries = [...counts.entries()]
         .map(([label, count]) => ({
             label,
             count,
@@ -1247,7 +1270,13 @@ function renderTags(records) {
         }))
         .sort((a, b) => b.count - a.count);
 
-    renderHList('tags-list', entries);
+    withFails = tagEntries.some(q => q.fails > 0);
+    withFailsButton.classList.toggle('hidden', !withFails);
+}
+
+function renderTags(records) {
+    setTagEntries(records);
+    renderTagList();
 }
 
 function renderColor(records) {
@@ -1262,7 +1291,7 @@ function renderColor(records) {
         }))
         .sort((a, b) => b.count - a.count);
 
-    renderHList('color-list', entries);
+    renderHList(colorList, entries);
 }
 
 function renderShape(records) {
@@ -1277,7 +1306,7 @@ function renderShape(records) {
         }))
         .sort((a, b) => b.count - a.count);
 
-    renderHList('shape-list', entries);
+    renderHList(shapeList, entries);
 }
 
 function renderBristol(records, buckets) {

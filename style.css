@@ -25,6 +25,7 @@
 
     --count: 0;
     --fails: 0;
+    --with-fails: 1;
     --total: 1;
 
     --inner-white: #ededca;
@@ -985,8 +986,8 @@ header button {
 .split {
     background: linear-gradient(
             to right,
-            var(--yellow) calc((var(--count) - var(--fails)) / var(--count) * 100%),
-            var(--blue) calc((var(--count) - var(--fails)) / var(--count) * 100%)
+            var(--yellow) calc((1 - var(--fails) / var(--count)) * 100%),
+            var(--blue) calc((1 - var(--fails) / var(--count)) * 100%)
     );
 }
 
