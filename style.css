@@ -1121,16 +1121,11 @@ header button {
     width: 100%;
     min-height: 48px;
     padding: 12px 14px;
-    border: 1px solid var(--head);
+    border: 1px solid var(--line);
     border-radius: var(--radius);
-    background: var(--head);
     color: var(--text);
     font: inherit;
     outline: 0;
-}
-
-.input:focus {
-    border: 1px solid var(--accent);
 }
 
 .input::placeholder {
@@ -1178,7 +1173,7 @@ header button {
     display: flex;
     gap: 4px;
     padding: 4px;
-    border: 1px solid var(--line);
+    background: var(--head);
     border-radius: var(--radius);
 }
 
@@ -1223,11 +1218,6 @@ header button {
 .segment input:checked + label {
     color: var(--bg);
     transition: color .28s;
-}
-
-.segment input:focus-visible + label {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
 }
 
 /*Модальное окно*/
