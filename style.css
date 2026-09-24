@@ -297,6 +297,12 @@ button svg {
     height: 32px;
 }
 
+.tool {
+    width: 24px;
+    min-width: 24px;
+    height: 24px;
+}
+
 .icon {
     width: 30px;
     min-width: 30px;
@@ -319,7 +325,7 @@ button svg {
 
 /* --- Кнопки-таблетки --- */
 .tap {
-    padding: 6px 10px;
+    padding: 0 12px;
     min-height: 50px;
     border-radius: 20px;
     vertical-align: middle;
