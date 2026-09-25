@@ -360,12 +360,15 @@ const renderPageCalendar = () => {
 // 1.1 Записи дня
 
 const recordHtml = ({created, pooped, bristol, color, volume, tags}) => {
+    volume = bristol ? S.volumes[Math.floor(volume / 20)] : '';
+    color = bristol ? getColorStyle(color) : '--inner: var(--blue)';
+    tags = tags.map(q => `<span class="small gray">${q}</span>`).join('');
     return `<button class="col" data-created="${created}">
-        <div class="tags">${tags.map(q => `<span class="small gray">${q}</span>`).join('')}</div>
+        <div class="tags">${tags}</div>
         <div class="record">
-            <div class="color" style="${bristol ? getColorStyle(color) : '--inner: var(--blue)'}"></div>
+            <div class="color" style="${color}"></div>
             <div>${S.brs[bristol]}</div>
-            <span class="small gray right">${S.volumes[Math.floor(volume / 20)]}</span>
+            <span class="small gray right">${volume}</span>
             <span class="mono gray small">${getTimeText(pooped)}</span>
         </div>
     </button>`;
