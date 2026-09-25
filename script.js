@@ -82,14 +82,14 @@ const getFiber = () => {
 
 
 const getFrequency = () => {
-    const {age} = person;
-    if (age < 0.1) return 3.24;
-    if (age < 0.5) return 1.99;
-    if (age < 1) return 1.66;
-    if (age < 2) return 1.53;
-    if (age < 5) return 1.15;
-    if (age < 10) return 1.02;
-    return 1.07;
+    const {age, sex} = person;
+    if (age < 0.1) return 4;
+    if (age < 0.5) return 3;
+    if (age < 1) return 2;
+    if (age < 3) return 1.5;
+    if (age < 5) return 1.2;
+    if (age < 10) return 1;
+    return sex ? 1 : 0.9;
 }
 
 const defaultPerson = {
@@ -1354,7 +1354,7 @@ function renderVolume(records, buckets) {
     const groups = bucketize(records, buckets);
     const values = groups.map(g => g.length ? g.reduce((s, r) => s + getVolume(r.volume), 0) : null);
     const value = records.length ? records.reduce((s, r) => s + getVolume(r.volume), 0) : null;
-    const normal = getNormal(0.8 * getVolume(50));
+    const normal = getNormal(getFrequency() * getVolume(50));
     renderVChart('volume-chart', buckets, values, 1, normal, 'yellow', value);
 }
 
