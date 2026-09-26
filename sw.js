@@ -1,6 +1,6 @@
 const GHPATH = "/kakaha";
 const APP_PREFIX = "kakaha_";
-const VERSION = "1.0.5";
+const VERSION = "1.0.6";
 
 const URLS = [
     `${GHPATH}/`,
