@@ -118,6 +118,37 @@ const getVolume = i => {
     return maxVolume;
 }
 
+const getWeight = () => {
+    const data = person.sex
+        ? [
+            [0, 3.3], [0.25, 6.4], [0.5, 7.9], [1, 9.6], [2, 12.2],
+            [5, 19.5], [7, 24.1], [9, 30.5], [11, 40.5],
+            [13, 55.2], [15, 66.2], [17, 74.0], [19, 72.3],
+            [24.5, 83.7], [34.5, 87.1], [44.5, 88.5],
+            [54.5, 87.8], [64.5, 87.0], [74.5, 86.6], [80, 80.0]
+        ]
+        : [
+            [0, 3.2], [0.25, 5.8], [0.5, 7.3], [1, 8.9], [2, 11.5],
+            [5, 18.2], [7, 24.4], [9, 31.4], [11, 43.2],
+            [13, 52.3], [15, 57.1], [17, 59.7], [19, 63.7],
+            [24.5, 68.9], [34.5, 75.0], [44.5, 74.8],
+            [54.5, 78.5], [64.5, 74.3], [74.5, 71.7], [80, 65.7]
+        ];
+    const age = Math.max(0, Math.min(80, person.age));
+
+    for (let i = 1; i < data.length; i++) {
+        if (age <= data[i][0]) {
+            const [a1, w1] = data[i - 1];
+            const [a2, w2] = data[i];
+            return +(w1 + (w2 - w1) * (age - a1) / (a2 - a1)).toFixed(1);
+        }
+    }
+
+    return data.at(-1)[1];
+};
+
+// Константы
+
 let date = new Date();
 let today = new Date(date);
 
@@ -246,11 +277,8 @@ calendar.addEventListener('click', e => {
         addPageMonth(button.id === 'prev' ? -1 : 1);
         return calendar.replaceChildren(getCalendarPage());
     }
-    button = button.firstElementChild;
-    if (button === chosenButton) return;
-
     chosenButton.classList.remove('big');
-    chosenButton = button;
+    chosenButton = button.firstElementChild;
 
     date = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), +chosenButton.innerText, 12);
     chosenButton.classList.add('big');
@@ -926,8 +954,9 @@ const closePersonPicker = () => {
     personPicker.classList.remove('open');
 };
 
+const digits = value => value.replace(/\D/g, '').slice(0, 8);
+
 const applyPersonPicker = () => {
-    person.weight = +weightInput.value || defaultPerson.weight;
     if (validDate(birthdateInput.value)) {
         person.birthdate = +digits(birthdateInput.value);
         person.age = getAge(person.birthdate);
@@ -936,6 +965,7 @@ const applyPersonPicker = () => {
         person.birthdate = null;
     }
     person.sex = sex;
+    person.weight = +weightInput.value.replace(',', '.') || getWeight();
     savePerson();
     closePersonPicker();
 };
@@ -950,8 +980,20 @@ const setSex = () => {
 const openPersonPicker = () => {
     console.log('openPersonPicker')
 
-    birthdateInput.value = person.birthdate ? format(person.birthdate.toString()) : '';
-    weightInput.value = person.weight || '';
+    if (person.birthdate) {
+        birthdate.digits = person.birthdate.toString();
+        birthdate.cursor = birthdate.digits.length;
+        birthdateInput.value = formatDate();
+    } else {
+        birthdate.digits = '';
+        birthdate.cursor = 0;
+        birthdateInput.value = '';
+    }
+    if (person.weight) {
+        weightInput.value = person.weight.toString().replace('.', ',');
+    } else {
+        weightInput.value = '';
+    }
 
     overlay.onclick = closePersonPicker;
     overlay.classList.add('open');
@@ -1419,7 +1461,7 @@ function renderPerson() {
     console.log('renderPerson')
     personButton.lastElementChild.innerHTML = `<span>${person.sex ? S.male : S.female}</span> 
         <span class="help">${person.age}</span><span class="help">${S.y}</span> • 
-        <span class="help">${person.weight}</span><span class="help">${S.kg}</span>`
+        <span class="help">${person.weight.toString().replace('.', ',')}</span><span class="help">${S.kg}</span>`
     setSex();
 }
 
@@ -1431,156 +1473,193 @@ const sexInput = document.getElementById('sex');
 
 /* ---------- Дата рождения ---------- */
 
-const start = [0, 2, 4];
-const pos = [0, 3, 6];
-const size = [2, 2, 4];
-const limit = [31, 12];
-
-let part = 0;
-let replace = false;
-
-const digits = value => value.replace(/\D/g, '').slice(0, 8);
-
-const format = value => {
-    value = digits(value);
-
-    return value.length < 3
-        ? value
-        : value.length < 5
-            ? `${value.slice(0, 2)}.${value.slice(2)}`
-            : `${value.slice(0, 2)}.${value.slice(2, 4)}.${value.slice(4)}`;
+const birthdate = {
+    input: birthdateInput,
+    digits: '',
+    cursor: 0
 };
 
-const move = p => requestAnimationFrame(() => birthdateInput.setSelectionRange(p, p));
 
-const select = p => {
-    part = p;
-    replace = true;
+const formatDate = () => {
+    if (!birthdate.digits) return '';
 
-    requestAnimationFrame(() =>
-        birthdateInput.setSelectionRange(pos[p], pos[p] + size[p])
-    );
+    const d = birthdate.digits.slice(0, 2) + (birthdate.digits.length >= 2 ? '.' : '');
+    const m = birthdate.digits.slice(2, 4) + (birthdate.digits.length >= 4 ? '.' : '');
+    const y = birthdate.digits.slice(4);
+
+    return d + m + y;
 };
 
-const getPart = p => p < 3 ? 0 : p < 6 ? 1 : 2;
+const Y = new Date().getFullYear() % 100;
 
-const validDate = value => {
-    const [, d, m, y] = value.match(/^(\d{2}).(\d{2}).(\d{4})$/) || [];
+const normalize = () => {
+    if (birthdate.cursor < birthdate.digits.length) birthdate.digits = birthdate.digits.slice(0, birthdate.cursor);
 
-    if (!d) return false;
-    const date = new Date(+y, +m - 1, +d);
+    if (+birthdate.digits[0] > 3) birthdate.digits = '0' + birthdate.digits;
 
-    return date.getDate() === +d &&
-        date.getMonth() === +m - 1 &&
-        date.getFullYear() === +y &&
-        +y >= 1900 && +y <= new Date().getFullYear();
+    if (birthdate.digits.length >= 2) {
+        const d = +birthdate.digits.slice(0, 2);
+
+        if (d > 31) birthdate.digits = '0' + birthdate.digits;
+        else if (d === 0) birthdate.digits = '01' + birthdate.digits.slice(2);
+    }
+
+    if (birthdate.digits.length >= 3 && +birthdate.digits[2] > 1) {
+        birthdate.digits = birthdate.digits.slice(0, 2) + '0' + birthdate.digits.slice(2);
+    }
+
+    if (birthdate.digits.length >= 4) {
+        const d = birthdate.digits.slice(0, 2);
+        const m = +birthdate.digits.slice(2, 4);
+
+        if (m > 12) birthdate.digits = d + '0' + birthdate.digits.slice(2);
+        else if (m === 0) birthdate.digits = d + '01' + birthdate.digits.slice(4);
+    }
+
+    if (birthdate.digits.length >= 6) {
+        const y = birthdate.digits.slice(4, 6);
+
+        if (y !== '19' && y !== '20') birthdate.digits = birthdate.digits.slice(0, 4) + (+y <= Y ? '20' : '19') + y;
+    }
+
+    birthdate.cursor = birthdate.digits.length;
+}
+
+const setValue = () => {
+    birthdate.input.value = formatDate();
+
+    let p = birthdate.cursor;
+    if (birthdate.cursor >= 2) p++;
+    if (birthdate.cursor >= 4) p++;
+
+    p = Math.min(p, birthdate.input.value.length);
+    birthdate.input.setSelectionRange(p, p);
 };
 
-birthdateInput.addEventListener('keydown', e => {
-    const {key} = e;
+const rawPosition = p => birthdate.input.value.slice(0, p).replace(/\D/g, '').length;
 
-    if (/^\d$/.test(key)) {
+birthdate.input.addEventListener('beforeinput', e => {
+    if (e.inputType === 'insertText' && e.data === '.') {
         e.preventDefault();
 
-        let value = digits(birthdateInput.value);
-        const s = start[part];
-        const n = size[part];
-        let current = replace ? '' : value.slice(s, s + n);
-
-        if (replace) {
-            value = value.slice(0, s);
-            replace = false;
+        // 1. -> 01.
+        if (birthdate.cursor === 1) {
+            birthdate.digits = '0' + birthdate.digits;
+            birthdate.cursor = 2;
+            setValue();
+            return;
         }
 
-        if (current.length === n) return;
+        // 01.1. -> 01.01.
+        if (birthdate.cursor === 3) {
+            birthdate.digits = birthdate.digits.slice(0, 2) + '0' + birthdate.digits.slice(2);
+            birthdate.cursor = 4;
+            setValue();
+        }
 
-        current += key;
+        return;
+    }
+    if (e.inputType === 'insertText' || e.inputType === 'insertFromPaste') {
+        e.preventDefault();
 
-        if (part < 2 && current.length === 2) {
-            if (+current === 0) return;
 
-            if (+current > limit[part]) {
-                value = value.slice(0, s) + '0' + current;
-                part++;
-                birthdateInput.value = format(value);
-                move(pos[part] + 1);
+        const p = (e.data || '').replace(/\D/g, '');
+        if (!p) return;
+
+        if (birthdate.cursor >= 8) return;
+
+        birthdate.digits = birthdate.digits.slice(0, birthdate.cursor) + p + birthdate.digits.slice(birthdate.cursor);
+        birthdate.cursor += p.length;
+
+        normalize();
+        setValue();
+    }
+
+    if (e.inputType === 'deleteContentBackward') {
+        e.preventDefault();
+
+        if (!birthdate.cursor) return;
+
+        if (birthdate.cursor === 8 && birthdate.digits.length === 8) {
+            const y = birthdate.digits.slice(4);
+
+            if (y.slice(0, 2) !== '19' && y.slice(0, 2) !== '20') {
+                birthdate.digits = birthdate.digits.slice(0, 4) + y.slice(2);
+                birthdate.cursor = 6;
+                setValue();
                 return;
             }
         }
-        birthdateInput.value = format(
-            value.slice(0, s) + current + value.slice(s + n)
-        );
 
-        if (current.length === n && part < 2) {
-            part++;
-            replace = true;
-            move(pos[part]);
-        } else {
-            move(birthdateInput.value.length);
-        }
-        return;
+        birthdate.digits = birthdate.digits.slice(0, birthdate.cursor - 1) + birthdate.digits.slice(birthdate.cursor);
+        birthdate.cursor--;
+
+        normalize();
+        setValue();
     }
+});
 
-    if (key.length === 1) {
+birthdate.input.addEventListener('click', () => {
+    birthdate.cursor = rawPosition(birthdate.input.selectionStart);
+});
+
+birthdate.input.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') {
         e.preventDefault();
-        return;
+        birthdate.cursor = Math.max(0, birthdate.cursor - 1);
+        setValue();
     }
 
-    if (key === 'ArrowLeft' || key === 'ArrowRight') {
-        const p = birthdateInput.selectionStart;
-
-        if ([2, 3, 5, 6].includes(p)) {
-            e.preventDefault();
-            move(p + (key === 'ArrowLeft' ? -1 : 1));
-        }
-
-        return;
-    }
-
-    if (key !== 'Backspace' && key !== 'Delete') return;
-
-    e.preventDefault();
-
-    if (replace) {
-        birthdateInput.value = format(digits(birthdateInput.value).slice(0, start[part]));
-        replace = false;
-        move(birthdateInput.value.length);
-        return;
-    }
-
-    const p = birthdateInput.selectionStart;
-    const i = key === 'Backspace'
-        ? p - 1 - (p > 2) - (p > 5)
-        : p - (p > 2) - (p > 5);
-
-    const value = digits(birthdateInput.value);
-
-    if (i >= 0 && i < value.length) {
-        birthdateInput.value = format(value.slice(0, i) + value.slice(i + 1));
-        move(key === 'Backspace' ? Math.max(0, p - 1) : p);
+    if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        birthdate.cursor = Math.min(8, birthdate.cursor + 1);
+        setValue();
     }
 });
 
-birthdateInput.addEventListener('click', () => select(getPart(birthdateInput.selectionStart)));
-birthdateInput.addEventListener('focus', () => select(getPart(birthdateInput.selectionStart)));
-
-birthdateInput.addEventListener('paste', e => {
+birthdate.input.addEventListener('paste', e => {
     e.preventDefault();
 
-    const value = digits(e.clipboardData.getData('text'));
+    const value = e.clipboardData.getData('text').trim();
+    const parts = value.split(/[.\-/\s]+/);
 
-    const d = +value.slice(0, 2);
-    if (value.length >= 2 && (d < 1 || d > 31)) return;
+    if (parts.length >= 3) {
+        let [d, m, y] = parts;
 
-    const m = +value.slice(2, 4);
-    if (value.length >= 4 && (m < 1 || m > 12)) return;
+        d = d.replace(/\D/g, '');
+        m = m.replace(/\D/g, '');
+        y = y.replace(/\D/g, '');
 
-    birthdateInput.value = format(value);
-    part = value.length < 3 ? 0 : (value.length < 5 ? 1 : 2);
+        if (d.length === 1) d = '0' + d;
+        if (m.length === 1) m = '0' + m;
 
-    replace = value.length < 8;
-    move(replace ? pos[part] : 10);
+        if (y.length === 1)
+            y = '200' + y;
+        else if (y.length === 2)
+            y = (+y <= Y ? '20' : '19') + y;
+        else
+            y = y.slice(0, 4);
+
+        birthdate.digits = (d + m + y).slice(0, 8);
+    } else {
+        birthdate.digits = value.replace(/\D/g, '').slice(0, 8);
+        normalize();
+    }
+
+    birthdate.cursor = birthdate.digits.length;
+    setValue();
 });
+
+const validDate = () => {
+    if (birthdate.digits.length !== 8) return false;
+
+    const d = +birthdate.digits.slice(0, 2);
+    const m = +birthdate.digits.slice(2, 4);
+    const y = +birthdate.digits.slice(4, 8);
+
+    const date = new Date(y, m - 1, d);
+    return date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d;
+}
 
 /* ---------- Пол ---------- */
 
@@ -1595,105 +1674,25 @@ sexInput.addEventListener('change', e => {
 
 /* ---------- Вес ---------- */
 
-let weightReplace = false;
-
 const normalizeWeight = value => {
     value = value.replace(',', '.').replace(/[^\d.]/g, '');
 
     const i = value.indexOf('.');
-    if (i >= 0) {
+    if (i >= 0)
         value = value.slice(0, i + 1) + value.slice(i + 1).replace(/\./g, '').slice(0, 1);
-    }
 
     value = value.replace(/^0+(?=\d)/, '');
-    return +value;
+
+    return +value > 999.9 ? '' : value.replace('.', ',');
 };
 
-weightInput.addEventListener('focus', () => {
-    weightReplace = true;
-    requestAnimationFrame(() => weightInput.setSelectionRange(0, weightInput.value.length));
-});
-
-weightInput.addEventListener('click', () => weightReplace || weightInput.setSelectionRange(0, weightInput.value.length));
-
-weightInput.addEventListener('keydown', e => {
-    const {key} = e;
-
-    if (/^\d$/.test(key)) {
-        e.preventDefault();
-
-        const current = weightReplace ? '' : weightInput.value;
-        const value = normalizeWeight(current + key);
-        if (value >= 1000) return;
-
-        if (value) {
-            weightInput.value = value.toString();
-            weightReplace = false;
-
-            const pos = weightInput.value.length;
-            weightInput.setSelectionRange(pos, pos);
-        }
-        return;
-    }
-    if (key === '.' || key === ',') {
-        e.preventDefault();
-
-        if (weightInput.value.includes('.')) return;
-
-        weightInput.value += '.';
-        weightReplace = false;
-
-        const pos = weightInput.value.length;
-        weightInput.setSelectionRange(pos, pos);
-        return;
-    }
-
-    if (key.length === 1) {
-        e.preventDefault();
-        return;
-    }
-
-    if (key === 'Backspace' || key === 'Delete') {
-        e.preventDefault();
-
-        if (weightReplace) {
-            weightInput.value = '';
-            weightReplace = false;
-        } else {
-            const p = weightInput.selectionStart;
-            const i = key === 'Backspace' ? p - 1 : p;
-
-            if (i >= 0 && i < weightInput.value.length) {
-                weightInput.value = weightInput.value.slice(0, i) + weightInput.value.slice(i + 1);
-
-                const pos = Math.max(0, p - (key === 'Backspace'));
-                weightInput.setSelectionRange(pos, pos);
-            }
-        }
-        return;
-    }
-
-    if (key === 'ArrowLeft' || key === 'ArrowRight') {
-        weightReplace = false;
-    }
+weightInput.addEventListener('input', () => {
+    weightInput.value = normalizeWeight(weightInput.value);
 });
 
 weightInput.addEventListener('paste', e => {
     e.preventDefault();
-
-    const value = normalizeWeight(e.clipboardData.getData('text'));
-
-    if (value) {
-        weightInput.value = value.toString();
-        weightReplace = false;
-
-        const pos = weightInput.value.length;
-        weightInput.setSelectionRange(pos, pos);
-    }
-});
-
-weightInput.addEventListener('input', () => {
-    weightInput.value = normalizeWeight(weightInput.value) || '';
+    weightInput.value = normalizeWeight(e.clipboardData.getData('text'));
 });
 
 
