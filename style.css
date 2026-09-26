@@ -680,27 +680,36 @@ div.color {
 #approve,
 #reject {
     position: fixed;
-    right: 10px;
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: var(--text);
-    opacity: .3;
 }
 
 #approve svg,
 #reject svg {
-    stroke: var(--bg);
     width: 24px;
     height: 24px;
+    stroke-width: 3;
 }
 
 #approve {
+    right: 12px;
     bottom: 12px;
+    background: var(--text);
+    opacity: .3;
+}
+
+#approve svg {
+    stroke: var(--bg);
 }
 
 #reject {
-    top: 12px;
+    right: 8px;
+    top: 8px;
+}
+
+#reject svg {
+    stroke: var(--help);
 }
 
 /* ==========================================================================
