@@ -21,7 +21,7 @@
 </head>
 <body>
 
-<section id="calendar-page" class="width-500">
+<section id="calendar-page" class="width-500 safe">
     <div id="calendar"></div>
     <h3 id="chosen-day" class="accent center"></h3>
     <div id="chosen-records"></div>
@@ -32,6 +32,16 @@
 <section id="record-page" class="hidden">
     <div class="scroll">
         <div class="width-500 col gap-30 pad-20">
+            <section>
+                <div class="row gap-15">
+                    <button id="pooped-date" aria-haspopup="dialog" class="tap"
+                            data-i18n-aria-label="selectDate"></button>
+
+                    <button id="pooped-time" aria-haspopup="dialog" class="tap"
+                            data-i18n-aria-label="selectTime"></button>
+
+                </div>
+            </section>
             <section>
                 <div id="bristol-label"></div>
                 <br>
@@ -57,16 +67,26 @@
             <section>
                 <div class="row add">
                     <h3 data-i18n="tags"></h3>
-                    <button id="edit-tags" class="right">
-                        <svg>
-                            <use href="sprite.svg#add"></use>
-                        </svg>
+                    <button id="edit-tags" class="right help small" data-i18n="change">
                     </button>
                 </div>
                 <br>
                 <div id="tag-buttons"></div>
             </section>
 
+            <button id="remove" class="red hidden pad-20" data-i18n="remove"></button>
+
+            <button id="approve" data-i18n-aria-label="approve">
+                <svg>
+                    <use href="sprite.svg#save"></use>
+                </svg>
+            </button>
+
+            <button id="reject" data-i18n-aria-label="reject">
+                <svg>
+                    <use href="sprite.svg#cancel"></use>
+                </svg>
+            </button>
         </div>
     </div>
 
@@ -76,7 +96,7 @@
             <input id="tag" type="text" maxlength="24"
                    data-i18n-placeholder="newTag"
                    data-i18n-aria-label="newTag" aria-label="">
-            <button id="create-tag" class="right" data-i18n="add"></button>
+            <button id="create-tag" class="right small" data-i18n="add"></button>
         </div>
 
         <div data-i18n="tagActions" class="small gray pad-10"></div>
@@ -135,7 +155,7 @@
     </div>
 </section>
 
-<section id="stats-page" class="width-500 pad-20 hidden">
+<section id="stats-page" class="width-500 pad-20 safe hidden">
     <div id="period">
         <div></div>
         <button class="active" data-i="0" data-i18n="week"></button>
@@ -216,7 +236,7 @@
 </section>
 
 
-<section id="person-page" class="width-500 hidden">
+<section id="person-page" class="width-500 safe hidden">
     <br/>
 
     <button id="person">
@@ -343,28 +363,6 @@
         <button data-page="person" class="pad-10" data-i18n-aria-label="person">
             <svg>
                 <use href="sprite.svg#settings"></use>
-            </svg>
-        </button>
-    </div>
-
-    <div class="hidden">
-        <button data-i18n-aria-label="cancel">
-            <svg>
-                <use href="sprite.svg#cancel"></use>
-            </svg>
-        </button>
-
-        <button id="pooped-date"
-                aria-haspopup="dialog"
-                data-i18n-aria-label="selectDate"></button>
-
-        <button id="pooped-time"
-                aria-haspopup="dialog"
-                data-i18n-aria-label="selectTime"></button>
-
-        <button data-i18n-aria-label="create">
-            <svg>
-                <use href="sprite.svg#save"></use>
             </svg>
         </button>
     </div>

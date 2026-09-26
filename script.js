@@ -98,7 +98,6 @@ const defaultPerson = {
     age: 25
 };
 
-
 let minVolume;
 let maxVolume;
 
@@ -147,7 +146,7 @@ const getWeight = () => {
     return data.at(-1)[1];
 };
 
-// Константы
+// Состояние
 
 let date = new Date();
 let today = new Date(date);
@@ -161,6 +160,7 @@ const getDefaultRecord = () => ({
     color: 'brown',
     tags: []
 });
+
 
 // Константы
 
@@ -217,11 +217,9 @@ const toggle = () => {
     page.classList.toggle('hidden');
     link.classList.toggle('active');
     if (page === pages.record) {
-        nav.classList.add('hidden');
-        recordNav.classList.remove('hidden');
+        nav.parentElement.classList.add('hidden');
     } else if (page === pages.calendar) {
-        nav.classList.remove('hidden');
-        recordNav.classList.add('hidden');
+        nav.parentElement.classList.remove('hidden');
     }
 }
 
@@ -250,9 +248,9 @@ const toCalendarPage = () => {
     toggle();
 }
 
-const recordNav = nav.nextElementSibling;
-const rejectAction = recordNav.firstElementChild;
-const approveAction = recordNav.lastElementChild;
+const rejectAction = document.getElementById('reject');
+const removeAction = document.getElementById('remove');
+const approveAction = document.getElementById('approve')
 
 // 1. Календарь
 
@@ -548,6 +546,17 @@ approveAction.onclick = (e) => {
     toCalendarPage();
 }
 
+let changed;
+
+const handleChange = () => {
+    if (!changed) {
+        console.log('handleChange');
+        changed = true;
+        approveAction.classList.remove('hidden');
+    }
+}
+
+
 // 1. Бристоль
 
 let bristolIcon;
@@ -579,7 +588,8 @@ const setBristol = (icon) => {
 
 bristolIcons.addEventListener('click', ({target}) => {
     const icon = target.closest('.icon');
-    icon && setBristol(icon)
+    icon && setBristol(icon);
+    handleChange();
 });
 
 // 2. Цвет
@@ -605,12 +615,14 @@ const setColor = (icon) => {
 colorIcons.addEventListener('click', ({target}) => {
     const icon = target.closest('.color');
     icon && setColor(icon);
+    handleChange();
 });
 
 // 3. Объем
 
 volumeRange.oninput = () => {
     record.volume = +volumeRange.value;
+    handleChange();
     setVolume();
 }
 
@@ -629,6 +641,7 @@ const getTagActionsHtml = () => tags.map(tag => `<button class="tap">${tag}</but
 tagButtons.onclick = e => {
     const button = e.target.closest('button');
     if (!button) return;
+    handleChange();
     button.classList.toggle('selected');
 }
 
@@ -636,7 +649,13 @@ tagButtons.onclick = e => {
 // Запись
 
 function renderRecord() {
+    console.log('renderRecord');
     const pooped = new Date(record.pooped);
+
+    changed = !record.created;
+
+    removeAction.classList.toggle('hidden', changed);
+    approveAction.classList.toggle('hidden', !changed);
 
     poopedDate.innerText = getDateText(pooped);
     poopedTime.innerText = getTimeText(pooped);
@@ -1054,22 +1073,14 @@ const savePerson = () => {
 
 // Модальное окно
 
-const question = document.querySelector('#question');
-const modal = document.querySelector('#modal');
+const question = document.getElementById('question');
+const modal = document.getElementById('modal');
 
-const confirmAction = document.querySelector('#confirm');
-const cancelAction = document.querySelector('#cancel');
-
-const toCalendarDate = () => {
-    toCalendarPage();
-    calendarDate = new Date(date);
-    calendarDate.setDate(1);
-    renderPageCalendar();
-}
+const confirmAction = document.getElementById('confirm');
+const cancelAction = document.getElementById('cancel');
 
 cancelAction.onclick = () => {
     modal.hidden = true;
-    if (page === pages.record) toCalendarDate();
 }
 
 modal.onclick = e => {
@@ -1083,25 +1094,34 @@ resetButton.onclick = () => {
     modal.hidden = false;
 }
 
+removeAction.onclick = e => {
+    console.log('removeAction');
+    e.preventDefault();
+    records = records.filter(({created}) => created !== record.created);
+    saveRecord();
+    calendarPages = {};
+    renderChosenRecords();
+    toCalendarPage();
+    calendarDate = new Date(date);
+    calendarDate.setDate(1);
+    renderPageCalendar();
+}
+
 rejectAction.onclick = e => {
     console.log('rejectAction');
     e.preventDefault();
-    if (record.created) {
-        question.innerText = S.removeQuestion;
-        modal.hidden = false;
-    } else {
-        toCalendarDate();
-    }
+    toCalendarPage();
+    calendarDate = new Date(date);
+    calendarDate.setDate(1);
+    renderPageCalendar();
 }
 
 confirmAction.onclick = (e) => {
     modal.hidden = true;
     e.preventDefault();
-    if (page === pages.person) {
-        records.length = 0;
-    } else if (page === pages.record) {
-        records = records.filter(({created}) => created !== record.created);
-    }
+    console.assert(page === pages.person);
+
+    records.length = 0;
     saveRecord();
     calendarPages = {};
     renderChosenRecords();
