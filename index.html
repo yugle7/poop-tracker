@@ -270,6 +270,24 @@
     </a>
 
     <br/>
+    <input type="text"
+       name="birthdate"
+       autocomplete="off"
+       inputmode="numeric"
+       placeholder="autocomplete=off">
+
+<input type="text"
+       name="birthdate2"
+       autocomplete="one-time-code"
+       inputmode="numeric"
+       placeholder="autocomplete=one-time-code">
+
+<input type="text"
+       name="birthdate3"
+       autocomplete="new-password"
+       inputmode="numeric"
+       placeholder="autocomplete=new-password">
+    <br/>
 
     <button id="reset" class="left row gap-10 pad-10">
         <svg class="icon">
@@ -289,6 +307,8 @@
                         type="text"
                         inputmode="numeric"
                         autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off"
                         placeholder="31.12.2000"
                         spellcheck="false"
                         maxlength="10"
