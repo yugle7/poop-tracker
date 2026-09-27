@@ -559,6 +559,8 @@ const handleChange = () => {
 
 // 1. Бристоль
 
+const volumeSection = document.getElementById('volume');
+const colorSection = document.getElementById('color');
 let bristolIcon;
 
 bristolIcons.innerHTML = [0, 1, 2, 3, 4, 5, 6, 7].map(bristol => `<button class="icon" role="radio" aria-label="${bristol}"><svg  class="img"><use href="sprite.svg#bristol-${bristol}"></use></svg></button>`).join('');
@@ -581,8 +583,14 @@ const setBristol = (icon) => {
     if (record.bristol) {
         bristolIcon.style.setProperty('--inner', `var(--inner-${record.color})`);
         bristolIcon.style.setProperty('--outer', `var(--outer-${record.color})`);
+
+        volumeSection.classList.remove('hidden');
+        colorSection.classList.remove('hidden');
     } else {
         bristolIcon.style.setProperty('--outer', `var(--blue)`);
+
+        volumeSection.classList.add('hidden');
+        colorSection.classList.add('hidden');
     }
 }
 
