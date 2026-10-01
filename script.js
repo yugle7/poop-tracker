@@ -1727,7 +1727,7 @@ weightInput.addEventListener('paste', e => {
 // Не показывать подсказки
 
 document.querySelectorAll('input').forEach(input => {
-    input.setAttribute('readonly', true);
+    input.setAttribute('readonly', 'true');
     input.addEventListener('focus', () => {
         input.removeAttribute('readonly');
     });
